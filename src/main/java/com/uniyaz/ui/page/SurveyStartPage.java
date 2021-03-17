@@ -1,14 +1,18 @@
 package com.uniyaz.ui.page;
 
-import com.uniyaz.ui.component.MyComboBox;
+import com.uniyaz.core.domain.Survey;
+import com.uniyaz.core.service.SurveyService;
+import com.uniyaz.ui.component.MyQTypeComboBox;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+
+import java.util.List;
 
 public class SurveyStartPage extends VerticalLayout {
 
     private TextField mail;
     private Button startButton;
-    private MyComboBox surveyComboBox;
+    private ComboBox surveyComboBox;
     private FormLayout mainFormLayout;
 
     public SurveyStartPage() {
@@ -27,8 +31,7 @@ public class SurveyStartPage extends VerticalLayout {
         mail.setCaption("Enter mail");
         mainFormLayout.addComponent(mail);
 
-        surveyComboBox = new MyComboBox();
-        surveyComboBox.setCaption("Select survey");
+        surveyComboBox = buildSurveyComboBox();
         mainFormLayout.addComponent(surveyComboBox);
 
         startButton = new Button();
@@ -36,5 +39,19 @@ public class SurveyStartPage extends VerticalLayout {
         startButton.setCaption("START");
         mainFormLayout.addComponent(startButton);
 
+    }
+
+    private ComboBox buildSurveyComboBox() {
+        ComboBox comboBox = new ComboBox();
+        comboBox.setCaption("Select survey");
+        SurveyService surveyService = new SurveyService();
+        if(surveyService.listSurveys()!=null){
+            List<Survey> surveyList =surveyService.listSurveys();
+            for (Survey survey : surveyList) {
+                comboBox.addItem(survey);
+                comboBox.setItemCaption(survey,survey.getName());
+            }
+        }
+        return comboBox;
     }
 }

@@ -1,10 +1,8 @@
 package com.uniyaz.core.service;
 
 import com.uniyaz.core.dao.PanelDao;
-import com.uniyaz.core.dao.SurveyDao;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Survey;
-import com.vaadin.ui.Panel;
 
 import java.util.List;
 
@@ -22,6 +20,11 @@ public class PanelService {
 
     public List<MyPanel> listPanels() {
         panelDao = new PanelDao();
-        return panelDao.listSurveys();
+        return panelDao.listPanels();
+    }
+
+    public List<MyPanel> listPanelsById(Survey survey) {
+        panelDao = new PanelDao();
+        return panelDao.listPanelsById(survey);
     }
 }

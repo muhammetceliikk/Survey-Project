@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost/universal?useUnicode=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Turkey</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/UNIVERSAL</property>
         <property name="hibernate.connection.username">Muhammet</property>
         <property name="hibernate.connection.password">12345678</property>
         <property name="hibernate.connection.pool_size">1</property>

@@ -1,43 +1,33 @@
 package com.uniyaz.ui.page;
 
+import com.uniyaz.core.domain.EnumQType;
 import com.uniyaz.core.domain.MyPanel;
-import com.uniyaz.core.domain.Survey;
-import com.uniyaz.core.service.PanelService;
-import com.uniyaz.core.service.SurveyService;
+import com.uniyaz.core.domain.Question;
+import com.uniyaz.core.service.QuestionService;
 import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.component.ContentComponent;
-import com.uniyaz.ui.component.MyEditButton;
-import com.uniyaz.ui.component.MySaveButton;
-import com.uniyaz.ui.component.PanelWindow;
+import com.uniyaz.ui.component.*;
 import com.vaadin.data.Item;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.PropertyId;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.*;
 
 import java.util.List;
 
-public class MyPanelPage extends VerticalLayout {
+public class MyQuestionPage extends VerticalLayout {
 
-    private Survey survey;
-    private Button addPanel;
+    private MyPanel myPanel;
+    private Button addQuestion;
 
     private Table table;
     private IndexedContainer container;
     private FormLayout mainFormLayout;
 
-    public MyPanelPage() {
-
+    public MyQuestionPage(MyPanel myPanel) {
+        this(new Question(),myPanel);
     }
 
-    public MyPanelPage(Survey survey) {
-        this(new MyPanel(),survey);
-    }
+    public MyQuestionPage(Question question, MyPanel myPanel) {
 
-    public MyPanelPage(MyPanel panel, Survey survey) {
-
-        this.survey = survey;
+        this.myPanel = myPanel;
 
         setSizeFull();
         buildMainLayout();
@@ -52,15 +42,15 @@ public class MyPanelPage extends VerticalLayout {
         mainFormLayout = new FormLayout();
         mainFormLayout.setSizeUndefined();
 
-        Label surveyTitle = new Label();
-        surveyTitle.setValue(survey.getName());
-        mainFormLayout.addComponent(surveyTitle);
+        Label panelTitle = new Label();
+        panelTitle.setValue(myPanel.getName());
+        mainFormLayout.addComponent(panelTitle);
 
         buildTable();
         mainFormLayout.addComponent(table);
 
-        addPanel = buildAddPanelButton();
-        mainFormLayout.addComponent(addPanel);
+        addQuestion = buildAddQuestionButton();
+        mainFormLayout.addComponent(addQuestion);
     }
 
     private void buildTable() {
@@ -70,7 +60,7 @@ public class MyPanelPage extends VerticalLayout {
 
         buildContainer();
         table.setContainerDataSource(container);
-        table.setColumnHeaders("ID", "NAME", "Edit", "Add Question");
+        table.setColumnHeaders("ID", "NAME", "Question Type", "Edit" , "Add Choice");
     }
 
     private void buildContainer() {
@@ -78,58 +68,60 @@ public class MyPanelPage extends VerticalLayout {
         container = new IndexedContainer();
         container.addContainerProperty("id", Long.class, null);
         container.addContainerProperty("name", String.class, null);
+        container.addContainerProperty("question type", EnumQType.class, null);
         container.addContainerProperty("update", MyEditButton.class, null);
-        container.addContainerProperty("add question", MySaveButton.class, null);
+        container.addContainerProperty("add choice", MySaveButton.class, null);
     }
 
     private void fillTable() {
 
-        PanelService panelService = new PanelService();
-        if(panelService.listPanelsById(survey) !=null){
-            List<MyPanel> panelList =panelService.listPanelsById(survey);
-            for (MyPanel myPanel : panelList) {
-                Item item = container.addItem(myPanel);
-                item.getItemProperty("id").setValue(myPanel.getId());
-                item.getItemProperty("name").setValue(myPanel.getName());
+        QuestionService questionService = new QuestionService();
+        if(questionService.listQuestionById(myPanel) !=null){
+            List<Question> questionList =questionService.listQuestionById(myPanel);
+            for (Question question : questionList) {
+                Item item = container.addItem(question);
+                item.getItemProperty("id").setValue(question.getId());
+                item.getItemProperty("name").setValue(question.getName());
+                item.getItemProperty("question type").setValue(question.getQType());
 
-                MyEditButton myEditButton = buildEditButton(myPanel);
+                MyEditButton myEditButton = buildEditButton(question);
                 item.getItemProperty("update").setValue(myEditButton);
 
-                MySaveButton mySaveButton = buildAddQuestionButton(myPanel);
-                item.getItemProperty("add question").setValue(mySaveButton);
+                MySaveButton mySaveButton = buildAddChoiceButton(question);
+                item.getItemProperty("add choice").setValue(mySaveButton);
             }
         }
     }
 
-    private MyEditButton buildEditButton(MyPanel myPanel) {
+    private MyEditButton buildEditButton(Question question) {
         MyEditButton myEditButton = new MyEditButton();
         myEditButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
                 MyUI myUI = (MyUI) UI.getCurrent();
-                PanelWindow panelWindow = new PanelWindow(myPanel,survey);
-                myUI.addWindow(panelWindow);
+                QuestionWindow questionWindow = new QuestionWindow(question,myPanel);
+                myUI.addWindow(questionWindow);
             }
         });
         return myEditButton;
     }
 
-    private Button buildAddPanelButton() {
+    private Button buildAddQuestionButton() {
         MySaveButton mySaveButton = new MySaveButton();
         mySaveButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
                 MyUI myUI = (MyUI) UI.getCurrent();
-                PanelWindow panelWindow = new PanelWindow(survey);
-                myUI.addWindow(panelWindow);
+                QuestionWindow questionWindow = new QuestionWindow(myPanel);
+                myUI.addWindow(questionWindow);
             }
         });
         return mySaveButton;
     }
 
-    private MySaveButton buildAddQuestionButton(MyPanel myPanel) {
+    private MySaveButton buildAddChoiceButton(Question question) {
         MySaveButton mySaveButton = new MySaveButton();
         mySaveButton.addClickListener(new Button.ClickListener() {
             @Override
@@ -137,12 +129,11 @@ public class MyPanelPage extends VerticalLayout {
 
                 MyUI myUI = (MyUI) UI.getCurrent();
                 ContentComponent contentComponent = myUI.getContentComponent();
-
-                MyQuestionPage myQuestionPage = new MyQuestionPage(myPanel);
-                contentComponent.addComponent(myQuestionPage);
+/*
+                MyChoicePage myChoicePage = new MyChoicePage(question);
+                contentComponent.addComponent(myChoicePage);*/
             }
         });
         return mySaveButton;
     }
-
 }

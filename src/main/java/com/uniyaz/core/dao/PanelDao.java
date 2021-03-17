@@ -1,6 +1,7 @@
 package com.uniyaz.core.dao;
 
 import com.uniyaz.core.domain.MyPanel;
+import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.utils.HibernateUtil;
 import com.vaadin.ui.Panel;
 import org.hibernate.Session;
@@ -23,13 +24,29 @@ public class PanelDao {
         }
     }
 
-    public List<MyPanel> listSurveys() {
+    public List<MyPanel> listPanels() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
             String hql =
                     "Select     panel " +
                             "From       MyPanel panel ";
             Query query = session.createQuery(hql);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<MyPanel> listPanelsById(Survey survey) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            String hql =
+                    "Select     panel " +
+                            "From       MyPanel panel " +
+                    "where panel.survey.id=:sid";
+            Query query = session.createQuery(hql);
+            query.setParameter("sid",survey.getId());
             return query.list();
         } catch (Exception e) {
             e.printStackTrace();
