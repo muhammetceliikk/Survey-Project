@@ -1,10 +1,12 @@
-package com.uniyaz.ui.component;
+package com.uniyaz.ui.myWindows;
 
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.service.PanelService;
 import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.page.MyPanelPage;
+import com.uniyaz.ui.component.ContentComponent;
+import com.uniyaz.ui.component.MySaveButton;
+import com.uniyaz.ui.page.MyTabSheet;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
@@ -23,6 +25,8 @@ public class PanelWindow extends Window {
     private Survey survey;
 
     private PanelService panelService;
+
+    private VerticalLayout verticalLayout;
     private FormLayout mainFormLayout;
     private BeanItem<MyPanel> panelBeanItem;
     private FieldGroup binder;
@@ -47,7 +51,14 @@ public class PanelWindow extends Window {
         center();
 
         buildMainLayout();
-        setContent(mainFormLayout);
+
+        verticalLayout = new VerticalLayout();
+        verticalLayout.setSizeFull();
+        verticalLayout.addComponent(mainFormLayout);
+
+        verticalLayout.setComponentAlignment(mainFormLayout,Alignment.MIDDLE_CENTER);
+
+        setContent(verticalLayout);
 
         binder.bindMemberFields(this);
         surveyName.setEnabled(false);
@@ -97,8 +108,9 @@ public class PanelWindow extends Window {
                     MyUI myUI = (MyUI) UI.getCurrent();
                     ContentComponent contentComponent = myUI.getContentComponent();
 
-                    MyPanelPage myPanelPage = new MyPanelPage(survey);
-                    contentComponent.addComponent(myPanelPage);
+                    //contette tabsheet var.belki tabsheetin içindeki surveyin tableını reslersin.
+                    MyTabSheet myTabSheet = new MyTabSheet();
+                    contentComponent.addComponent(myTabSheet);
 
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();

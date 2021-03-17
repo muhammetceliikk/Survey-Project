@@ -1,20 +1,20 @@
-package com.uniyaz.ui.component;
+package com.uniyaz.ui.myWindows;
 
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.service.QuestionService;
 import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.page.MyQuestionPage;
+import com.uniyaz.ui.component.ContentComponent;
+import com.uniyaz.ui.component.MyQTypeComboBox;
+import com.uniyaz.ui.component.MySaveButton;
+import com.uniyaz.ui.page.MyTabSheet;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 
 
-public class QuestionWindow extends com.vaadin.ui.Window {
+public class QuestionWindow extends Window {
 
     @PropertyId("id")
     private TextField id;
@@ -30,6 +30,8 @@ public class QuestionWindow extends com.vaadin.ui.Window {
     private MyPanel myPanel;
 
     private QuestionService questionService;
+
+    private VerticalLayout verticalLayout;
     private FormLayout mainFormLayout;
     private BeanItem<Question> questionBeanItem;
     private FieldGroup binder;
@@ -50,11 +52,17 @@ public class QuestionWindow extends com.vaadin.ui.Window {
         binder = new FieldGroup(questionBeanItem);
 
         setWidth(45, Unit.PERCENTAGE);
-        setHeight(250, Unit.PIXELS);
+        setHeight(300, Unit.PIXELS);
         center();
 
         buildMainLayout();
-        setContent(mainFormLayout);
+        verticalLayout = new VerticalLayout();
+        verticalLayout.setSizeFull();
+        verticalLayout.addComponent(mainFormLayout);
+
+        verticalLayout.setComponentAlignment(mainFormLayout,Alignment.MIDDLE_CENTER);
+
+        setContent(verticalLayout);
 
         binder.bindMemberFields(this);
         panelName.setEnabled(false);
@@ -89,6 +97,7 @@ public class QuestionWindow extends com.vaadin.ui.Window {
 
         saveButton = buildSaveButton();
         mainFormLayout.addComponent(saveButton);
+
     }
 
     private MySaveButton buildSaveButton() {
@@ -108,9 +117,9 @@ public class QuestionWindow extends com.vaadin.ui.Window {
                     MyUI myUI = (MyUI) UI.getCurrent();
                     ContentComponent contentComponent = myUI.getContentComponent();
 
-                    MyQuestionPage questionPage = new MyQuestionPage(myPanel);
-                    contentComponent.addComponent(questionPage);
-
+                    //contette tabsheet var.belki tabsheetin içindeki surveyin tableını reslersin.
+                    MyTabSheet myTabSheet = new MyTabSheet();
+                    contentComponent.addComponent(myTabSheet);
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }

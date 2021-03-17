@@ -1,13 +1,14 @@
 package com.uniyaz.ui.component;
 
 import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.page.SurveyPage;
+import com.uniyaz.ui.page.MyTabSheet;
 import com.uniyaz.ui.page.SurveyListPage;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.UI;
 
 public class MyMenuBar extends com.vaadin.ui.MenuBar {
 
+    private MyTabSheet myTabSheet;
     private ContentComponent contentComponent;
 
     public MyMenuBar() {
@@ -24,8 +25,9 @@ public class MyMenuBar extends com.vaadin.ui.MenuBar {
         productTransactionsMenuItem.addItem("Add Survey", FontAwesome.PLUS, new Command() {
             @Override
             public void menuSelected(MenuItem menuItem) {
-                SurveyPage surveyPage = new SurveyPage();
-                contentComponent.addComponent(surveyPage);
+                myTabSheet = new MyTabSheet();
+//                SurveyPage surveyPage = new SurveyPage();
+                contentComponent.addComponent(myTabSheet);
             }
         });
 

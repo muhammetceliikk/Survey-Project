@@ -3,10 +3,8 @@ package com.uniyaz.ui.page;
 import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.service.SurveyService;
 import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.component.ContentComponent;
-import com.uniyaz.ui.component.MyAddButton;
-import com.uniyaz.ui.component.MyEditButton;
-import com.uniyaz.ui.component.MySaveButton;
+import com.uniyaz.ui.component.*;
+import com.uniyaz.ui.myWindows.SurveyWindow;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.*;
@@ -15,7 +13,9 @@ import java.util.List;
 
 public class SurveyListPage extends VerticalLayout {
 
+    private MyAddButton addSurveyButton;
     private Table table;
+
     private IndexedContainer container;
     private VerticalLayout mainLayout;
 
@@ -36,16 +36,20 @@ public class SurveyListPage extends VerticalLayout {
 
         buildTable();
         mainLayout.addComponent(table);
+
+        addSurveyButton = buildAddSurveyButton();
+        mainLayout.addComponent(addSurveyButton);
     }
 
     private void buildTable() {
 
         table = new Table();
         table.setPageLength(table.size());
+        table.setSelectable(true);
 
         buildContainer();
         table.setContainerDataSource(container);
-        table.setColumnHeaders("ID", "NAME", "Edit", "Add Panel");
+        table.setColumnHeaders("ID", "NAME", "Edit");
     }
 
     private void buildContainer() {
@@ -54,7 +58,6 @@ public class SurveyListPage extends VerticalLayout {
         container.addContainerProperty("id", Long.class, null);
         container.addContainerProperty("name", String.class, null);
         container.addContainerProperty("update", MyEditButton.class, null);
-        container.addContainerProperty("add panel", MyAddButton.class, null);
     }
 
     private void fillTable() {
@@ -69,8 +72,6 @@ public class SurveyListPage extends VerticalLayout {
             MyEditButton myEditButton = buildEditButton(survey);
             item.getItemProperty("update").setValue(myEditButton);
 
-            MyAddButton myAddButton = buildAddPanelButton(survey);
-            item.getItemProperty("add panel").setValue(myAddButton);
         }
 
     }
@@ -82,28 +83,28 @@ public class SurveyListPage extends VerticalLayout {
             public void buttonClick(Button.ClickEvent clickEvent) {
 
                 MyUI myUI = (MyUI) UI.getCurrent();
-                ContentComponent contentComponent = myUI.getContentComponent();
-
-                SurveyPage surveyPage = new SurveyPage(survey);
-                contentComponent.addComponent(surveyPage);
+                SurveyWindow surveyWindow  = new SurveyWindow(survey);
+                myUI.addWindow(surveyWindow);
             }
         });
         return myEditButton;
     }
 
-    private MyAddButton buildAddPanelButton(Survey survey) {
+    private MyAddButton buildAddSurveyButton() {
         MyAddButton myAddButton = new MyAddButton();
         myAddButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
                 MyUI myUI = (MyUI) UI.getCurrent();
-                ContentComponent contentComponent = myUI.getContentComponent();
-
-                MyPanelPage myPanelPage = new MyPanelPage(survey);
-                contentComponent.addComponent(myPanelPage);
+                SurveyWindow surveyWindow  = new SurveyWindow();
+                myUI.addWindow(surveyWindow);
             }
         });
         return myAddButton;
+    }
+
+    public Table getTable() {
+        return table;
     }
 }

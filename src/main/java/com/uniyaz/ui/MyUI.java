@@ -41,8 +41,8 @@ public class MyUI extends UI {
         contentComponent.addComponent(new SurveyStartPage());
 
         MyMenuBar myMenuBar = new MyMenuBar();
-
         mainLayout.addComponent(myMenuBar);
+
         mainLayout.addComponent(contentComponent);
 
         mainLayout.setExpandRatio(myMenuBar, 0.5f);

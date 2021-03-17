@@ -3,16 +3,13 @@ package com.uniyaz.ui.page;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.service.PanelService;
-import com.uniyaz.core.service.SurveyService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.ContentComponent;
+import com.uniyaz.ui.component.MyAddButton;
 import com.uniyaz.ui.component.MyEditButton;
 import com.uniyaz.ui.component.MySaveButton;
-import com.uniyaz.ui.component.PanelWindow;
+import com.uniyaz.ui.myWindows.PanelWindow;
 import com.vaadin.data.Item;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.PropertyId;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.*;
 
@@ -45,6 +42,7 @@ public class MyPanelPage extends VerticalLayout {
         setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
 
         fillTable();
+
     }
 
     private void buildMainLayout() {
@@ -53,7 +51,7 @@ public class MyPanelPage extends VerticalLayout {
         mainFormLayout.setSizeUndefined();
 
         Label surveyTitle = new Label();
-        surveyTitle.setValue(survey.getName());
+        surveyTitle.setValue("Survey: "+survey.getName());
         mainFormLayout.addComponent(surveyTitle);
 
         buildTable();
@@ -67,10 +65,11 @@ public class MyPanelPage extends VerticalLayout {
 
         table = new Table();
         table.setPageLength(table.size());
+        table.setSelectable(true);
 
         buildContainer();
         table.setContainerDataSource(container);
-        table.setColumnHeaders("ID", "NAME", "Edit", "Add Question");
+        table.setColumnHeaders("ID", "NAME", "Edit");
     }
 
     private void buildContainer() {
@@ -79,7 +78,6 @@ public class MyPanelPage extends VerticalLayout {
         container.addContainerProperty("id", Long.class, null);
         container.addContainerProperty("name", String.class, null);
         container.addContainerProperty("update", MyEditButton.class, null);
-        container.addContainerProperty("add question", MySaveButton.class, null);
     }
 
     private void fillTable() {
@@ -94,9 +92,6 @@ public class MyPanelPage extends VerticalLayout {
 
                 MyEditButton myEditButton = buildEditButton(myPanel);
                 item.getItemProperty("update").setValue(myEditButton);
-
-                MySaveButton mySaveButton = buildAddQuestionButton(myPanel);
-                item.getItemProperty("add question").setValue(mySaveButton);
             }
         }
     }
@@ -116,8 +111,8 @@ public class MyPanelPage extends VerticalLayout {
     }
 
     private Button buildAddPanelButton() {
-        MySaveButton mySaveButton = new MySaveButton();
-        mySaveButton.addClickListener(new Button.ClickListener() {
+        MyAddButton myAddButton = new MyAddButton();
+        myAddButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
@@ -126,7 +121,7 @@ public class MyPanelPage extends VerticalLayout {
                 myUI.addWindow(panelWindow);
             }
         });
-        return mySaveButton;
+        return myAddButton;
     }
 
     private MySaveButton buildAddQuestionButton(MyPanel myPanel) {
@@ -145,4 +140,8 @@ public class MyPanelPage extends VerticalLayout {
         return mySaveButton;
     }
 
+
+    public Table getTable() {
+        return table;
+    }
 }
