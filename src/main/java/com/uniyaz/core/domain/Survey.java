@@ -49,4 +49,12 @@ public class Survey extends BaseEntity{
     public int hashCode() {
         return Objects.hash(super.hashCode(), id, name);
     }
+
+    @Override
+    public String toString() {
+        return "Survey{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

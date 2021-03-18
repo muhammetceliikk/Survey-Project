@@ -1,7 +1,6 @@
 package com.uniyaz.ui.component;
 
 import com.uniyaz.core.domain.*;
-import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.page.MyChoicePage;
 import com.uniyaz.ui.page.MyPanelPage;
 import com.uniyaz.ui.page.MyQuestionPage;
@@ -31,7 +30,6 @@ public class MyTabSheet extends VerticalLayout {
     public MyTabSheet() {
 
         buildTabSheet();
-
     }
 
     private void buildTabSheet() {
@@ -41,13 +39,63 @@ public class MyTabSheet extends VerticalLayout {
 
         addTabs();
 
+        buildTabListener();
+    }
+
+    private void addTabs() {
+        // Survey
+        surveyListPage = new SurveyListPage();
+        surveyListPage.setSizeUndefined();
+
+        surveyTab = new VerticalLayout();
+        surveyTab.setSizeFull();
+        surveyTab.addComponent(surveyListPage);
+        surveyTab.setComponentAlignment(surveyListPage,Alignment.MIDDLE_CENTER);
+        tabsheet.addTab(surveyTab,"Survey");
+
+        surveyListPage.getTable().addItemClickListener(new ItemClickEvent.ItemClickListener() {
+            @Override
+            public void itemClick(ItemClickEvent itemClickEvent) {
+                survey = (Survey) itemClickEvent.getItemId();
+
+                myPanelPage.fillPageBySurvey(survey);
+                myPanel=null;
+                question=null;
+                choice=null;
+            }
+        });
+        //Panel
+        myPanelPage = new MyPanelPage();
+        panelTab = new VerticalLayout();
+        panelTab.addComponent(myPanelPage);
+
+        tabsheet.addTab(panelTab,"Panel");
+        //Question
+        myQuestionPage = new MyQuestionPage();
+
+        questionTab = new VerticalLayout();
+        questionTab.addComponent(myQuestionPage);
+        questionTab.setCaption("Question");
+
+        tabsheet.addComponent(questionTab);
+        //Choice
+        myChoicePage = new MyChoicePage();
+
+        choiceTab = new VerticalLayout();
+        choiceTab.addComponent(myChoicePage);
+        choiceTab.setCaption("Choice");
+
+        tabsheet.addComponent(choiceTab);
+    }
+
+    private void buildTabListener() {
+
         tabsheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
             @Override
             public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
 
                 TabSheet tabSheet = selectedTabChangeEvent.getTabSheet();
                 Layout tab = (Layout) tabSheet.getSelectedTab();
-
                 String caption = tabSheet.getTab(tab).getCaption();
 
                 switch (caption){
@@ -108,71 +156,4 @@ public class MyTabSheet extends VerticalLayout {
         });
     }
 
-    private void addTabs() {
-        // Survey
-        surveyListPage = new SurveyListPage();
-        surveyListPage.setSizeUndefined();
-
-        surveyTab = new VerticalLayout();
-        surveyTab.addComponent(surveyListPage);
-        surveyTab.setComponentAlignment(surveyListPage,Alignment.MIDDLE_CENTER);
-        tabsheet.addTab(surveyTab,"Survey");
-
-        surveyListPage.getTable().addItemClickListener(new ItemClickEvent.ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent itemClickEvent) {
-                survey = (Survey) itemClickEvent.getItemId();
-
-                myPanelPage.fillPageBySurvey(survey);
-                myPanel=null;
-                question=null;
-                choice=null;
-            }
-        });
-
-        //Panel
-        myPanelPage = new MyPanelPage();
-        panelTab = new VerticalLayout();
-        panelTab.addComponent(myPanelPage);
-
-        tabsheet.addTab(panelTab,"Panel");
-
-        //Question
-        myQuestionPage = new MyQuestionPage();
-
-        questionTab = new VerticalLayout();
-        questionTab.addComponent(myQuestionPage);
-        questionTab.setCaption("Question");
-
-        tabsheet.addComponent(questionTab);
-
-        //Choice
-        myChoicePage = new MyChoicePage();
-
-        choiceTab = new VerticalLayout();
-        choiceTab.addComponent(myChoicePage);
-        choiceTab.setCaption("Choice");
-
-        tabsheet.addComponent(choiceTab);
-    }
-
-    public VerticalLayout getSurveyTab() {
-        return surveyTab;
-    }
-
-    public VerticalLayout getPanelTab() {
-        return panelTab;
-    }
-
-    public VerticalLayout getQuestionTab() {
-        return questionTab;
-    }
-
-    public VerticalLayout getChoiceTab() {
-        return choiceTab;
-    }
-
-    public TabSheet getTabsheet() {
-        return tabsheet;
-    }
 }

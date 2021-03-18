@@ -29,14 +29,14 @@ public class MyMenuBar extends com.vaadin.ui.MenuBar {
             }
         });
 
-        MenuItem fillSurveyMenuItem = addItem("Fill Survey", FontAwesome.PLUS,new Command() {
+        MenuItem fillSurveyMenuItem = addItem("Fill Survey", FontAwesome.PENCIL,new Command() {
             @Override
             public void menuSelected(MenuItem menuItem) {
                 contentComponent.addComponent(new SurveyStartPage());
             }
         });
 
-        MenuItem showFilledSurveys = addItem("Filled Surveys", FontAwesome.PLUS, new Command() {
+        MenuItem showFilledSurveys = addItem("Filled Surveys", FontAwesome.LIST, new Command() {
             @Override
             public void menuSelected(MenuItem menuItem) {
                 contentComponent.addComponent(new FilledSurveysPage());
