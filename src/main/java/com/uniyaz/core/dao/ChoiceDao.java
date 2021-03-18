@@ -2,7 +2,6 @@ package com.uniyaz.core.dao;
 
 import com.uniyaz.core.domain.Choice;
 import com.uniyaz.core.domain.Question;
-import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

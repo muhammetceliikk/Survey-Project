@@ -3,7 +3,6 @@ package com.uniyaz.core.dao;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.utils.HibernateUtil;
-import com.vaadin.ui.Panel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;

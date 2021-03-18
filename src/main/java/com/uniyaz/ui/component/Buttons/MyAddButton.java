@@ -1,4 +1,4 @@
-package com.uniyaz.ui.component;
+package com.uniyaz.ui.component.Buttons;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;

@@ -5,17 +5,14 @@ import com.uniyaz.core.domain.Choice;
 import com.uniyaz.core.service.*;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.ContentComponent;
-import com.uniyaz.ui.component.MySaveButton;
-import com.vaadin.data.Item;
+import com.uniyaz.ui.component.Buttons.MySaveButton;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-import javax.xml.soap.Text;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -51,18 +48,21 @@ public class PreparedSurveyPage extends VerticalLayout {
 
 
     public PreparedSurveyPage(Survey survey) {
+
         this(survey,"");
 
         mySaveButton.setVisible(false);
     }
 
     public PreparedSurveyPage(Survey survey, String mail) {
+
         this.mail = mail;
         this.survey = survey;
         buildMainLayout();
     }
 
     private void buildMainLayout() {
+
         mainLayout = new FormLayout();
 
         createSurvey(survey);
@@ -73,6 +73,7 @@ public class PreparedSurveyPage extends VerticalLayout {
     }
 
     private MySaveButton buildSaveButton() {
+
         MySaveButton mySaveButton = new MySaveButton();
         mySaveButton.addClickListener(new Button.ClickListener() {
             @Override

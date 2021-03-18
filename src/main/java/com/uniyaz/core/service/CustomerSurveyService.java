@@ -31,10 +31,4 @@ public class CustomerSurveyService {
         customerSurveyDao = new CustomerSurveyDao();
         return customerSurveyDao.listCustomerSurveysByMail(mail);
     }
-/*
-    public List<CustomerSurvey> listCustomerSurveysById(Question question) {
-        customerSurveyDao = new CustomerSurveyDao();
-        return customerSurveyDao.listCustomerSurvesById(question);
-    }*/
-
 }

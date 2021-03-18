@@ -4,6 +4,8 @@ import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.service.SurveyService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.*;
+import com.uniyaz.ui.component.Buttons.MyAddButton;
+import com.uniyaz.ui.component.Buttons.MyEditButton;
 import com.uniyaz.ui.myWindows.SurveyWindow;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;

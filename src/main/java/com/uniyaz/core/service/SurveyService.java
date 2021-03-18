@@ -29,7 +29,7 @@ public class SurveyService {
     }
 
 
-    public Survey getServeyByID(Survey survey) {
+    public Survey getSurveyByID(Survey survey) {
         surveyDao = new SurveyDao();
         return surveyDao.getServeyByID(survey);
     }
