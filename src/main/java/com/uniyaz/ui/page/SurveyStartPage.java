@@ -21,6 +21,7 @@ public class SurveyStartPage extends VerticalLayout {
     private Survey survey;
 
     public SurveyStartPage() {
+
         setSizeFull();
         buildMainLayout();
     }

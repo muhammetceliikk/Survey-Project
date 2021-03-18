@@ -16,7 +16,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class PreparedSurveyPage extends VerticalLayout {
+public class PreparedSurveyPage extends Panel {
 
     private PanelService panelService;
     private QuestionService questionService;
@@ -63,13 +63,15 @@ public class PreparedSurveyPage extends VerticalLayout {
 
     private void buildMainLayout() {
 
+        setSizeFull();
         mainLayout = new FormLayout();
 
         createSurvey(survey);
 
         mySaveButton = buildSaveButton();
         mainLayout.addComponent(mySaveButton);
-        addComponent(mainLayout);
+        addStyleName("mypanel");
+        setContent(mainLayout);
     }
 
     private MySaveButton buildSaveButton() {

@@ -34,5 +34,9 @@
 @mixin mytheme {
   @include valo;
 
+  .mypanel{
+    overflow: auto
+  }
+
   // Insert your own theme rules here
 }
