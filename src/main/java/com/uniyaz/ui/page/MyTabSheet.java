@@ -12,6 +12,7 @@ public class MyTabSheet extends VerticalLayout {
     private SurveyListPage surveyListPage;
     private MyPanelPage myPanelPage;
     private MyQuestionPage myQuestionPage;
+    private MyChoicePage myChoicePage;
 
     private Survey survey;
     private MyPanel myPanel;
@@ -53,16 +54,16 @@ public class MyTabSheet extends VerticalLayout {
 
                     case "Panel":
                         if(survey!=null){
-                            tab.removeAllComponents();
-                            myPanelPage= new MyPanelPage(survey);
                             myPanelPage.getTable().addItemClickListener(new ItemClickEvent.ItemClickListener() {
                                 @Override
                                 public void itemClick(ItemClickEvent itemClickEvent) {
                                     myPanel = (MyPanel) itemClickEvent.getItemId();
+
+                                    myQuestionPage.fillPageByPanel(myPanel);
                                     question=null;
+                                    choice=null;
                                 }
                             });
-                            tab.addComponent(myPanelPage);
                         }
                         else{
                             Notification.show("You must choose a survey to access panel.");
@@ -71,21 +72,33 @@ public class MyTabSheet extends VerticalLayout {
                         break;
                     case "Question":
                         if(myPanel!=null){
-                            tab.removeAllComponents();
-                            myQuestionPage= new MyQuestionPage(myPanel);
                             myQuestionPage.getTable().addItemClickListener(new ItemClickEvent.ItemClickListener() {
                                 @Override
                                 public void itemClick(ItemClickEvent itemClickEvent) {
                                     question = (Question) itemClickEvent.getItemId();
+
+                                    myChoicePage.fillPageByQuestion(question);
                                     choice=null;
                                 }
                             });
-
-                            tab.addComponent(myQuestionPage);
                         }
                         else{
                             Notification.show("You must choose a panel to access question.");
                             tabSheet.setSelectedTab(panelTab);
+                        }
+                        break;
+                    case "Choice":
+                        if(question!=null){
+                            myChoicePage.getTable().addItemClickListener(new ItemClickEvent.ItemClickListener() {
+                                @Override
+                                public void itemClick(ItemClickEvent itemClickEvent) {
+                                    choice = (Choice) itemClickEvent.getItemId();
+                                }
+                            });
+                        }
+                        else{
+                            Notification.show("You must choose a panel to access question.");
+                            tabSheet.setSelectedTab(questionTab);
                         }
                         break;
                 }
@@ -106,8 +119,11 @@ public class MyTabSheet extends VerticalLayout {
             @Override
             public void itemClick(ItemClickEvent itemClickEvent) {
                 survey = (Survey) itemClickEvent.getItemId();
-                myPanel = null;
-                question = null;
+
+                myPanelPage.fillPageBySurvey(survey);
+                myPanel=null;
+                question=null;
+                choice=null;
             }
         });
 
@@ -119,7 +135,7 @@ public class MyTabSheet extends VerticalLayout {
         tabsheet.addTab(panelTab,"Panel");
 
         //Question
-        MyQuestionPage myQuestionPage = new MyQuestionPage();
+        myQuestionPage = new MyQuestionPage();
 
         questionTab = new VerticalLayout();
         questionTab.addComponent(myQuestionPage);
@@ -128,13 +144,32 @@ public class MyTabSheet extends VerticalLayout {
         tabsheet.addComponent(questionTab);
 
         //Choice
-        MyChoicePage myChoicePage = new MyChoicePage();
+        myChoicePage = new MyChoicePage();
 
         choiceTab = new VerticalLayout();
         choiceTab.addComponent(myChoicePage);
         choiceTab.setCaption("Choice");
 
         tabsheet.addComponent(choiceTab);
+    }
 
+    public VerticalLayout getSurveyTab() {
+        return surveyTab;
+    }
+
+    public VerticalLayout getPanelTab() {
+        return panelTab;
+    }
+
+    public VerticalLayout getQuestionTab() {
+        return questionTab;
+    }
+
+    public VerticalLayout getChoiceTab() {
+        return choiceTab;
+    }
+
+    public TabSheet getTabsheet() {
+        return tabsheet;
     }
 }

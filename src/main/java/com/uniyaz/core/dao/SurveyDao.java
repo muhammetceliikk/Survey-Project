@@ -22,6 +22,17 @@ public class SurveyDao {
         }
     }
 
+    public void deleteSurvey(Survey survey) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.delete(survey);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Survey> listSurveys() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
@@ -35,4 +46,5 @@ public class SurveyDao {
         }
         return null;
     }
+
 }

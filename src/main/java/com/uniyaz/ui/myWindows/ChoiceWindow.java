@@ -1,7 +1,10 @@
 package com.uniyaz.ui.myWindows;
 
+import com.uniyaz.core.domain.Choice;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Question;
+import com.uniyaz.core.service.ChoiceService;
+import com.uniyaz.core.service.PanelService;
 import com.uniyaz.core.service.QuestionService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.ContentComponent;
@@ -15,7 +18,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 
 
-public class QuestionWindow extends Window {
+public class ChoiceWindow extends Window {
 
     @PropertyId("id")
     private TextField id;
@@ -23,35 +26,32 @@ public class QuestionWindow extends Window {
     @PropertyId("name")
     private TextField name;
 
-    @PropertyId("QType")
-    private MyQTypeComboBox QType;
+    private TextField questionName;
 
-    private TextField panelName;
+    private Question question;
 
-    private MyPanel myPanel;
-
-    private QuestionService questionService;
+    private ChoiceService choiceService;
 
     private VerticalLayout verticalLayout;
     private FormLayout mainFormLayout;
-    private BeanItem<Question> questionBeanItem;
+    private BeanItem<Choice> choiceBeanItem;
     private FieldGroup binder;
     private MySaveButton saveButton;
     private MyDeleteButton deleteButton;
 
-    public QuestionWindow() {
+    public ChoiceWindow() {
     }
 
-    public QuestionWindow(MyPanel myPanel) {
-        this(new Question(),myPanel);
+    public ChoiceWindow(Question question) {
+        this(new Choice(),question);
     }
 
-    public QuestionWindow(Question question, MyPanel myPanel) {
+    public ChoiceWindow(Choice choice, Question question) {
 
-        this.myPanel = myPanel;
+        this.question = question;
 
-        questionBeanItem = new BeanItem<Question>(question);
-        binder = new FieldGroup(questionBeanItem);
+        choiceBeanItem = new BeanItem<Choice>(choice);
+        binder = new FieldGroup(choiceBeanItem);
 
         setWidth(45, Unit.PERCENTAGE);
         setHeight(300, Unit.PIXELS);
@@ -67,7 +67,7 @@ public class QuestionWindow extends Window {
         setContent(verticalLayout);
 
         binder.bindMemberFields(this);
-        panelName.setEnabled(false);
+        questionName.setEnabled(false);
         id.setEnabled(false);
     }
 
@@ -77,11 +77,11 @@ public class QuestionWindow extends Window {
         mainFormLayout.setSizeUndefined();
         mainFormLayout.setMargin(true);
 
-        panelName = new TextField();
-        panelName.setValue(myPanel.getName());
-        panelName.setCaption("Panel Title");
-        panelName.setNullRepresentation("");
-        mainFormLayout.addComponent(panelName);
+        questionName = new TextField();
+        questionName.setValue(question.getName());
+        questionName.setCaption("Question Title");
+        questionName.setNullRepresentation("");
+        mainFormLayout.addComponent(questionName);
 
         id = new TextField();
         id.setCaption("ID");
@@ -89,20 +89,15 @@ public class QuestionWindow extends Window {
         mainFormLayout.addComponent(id);
 
         name = new TextField();
-        name.setCaption("Question Title");
+        name.setCaption("Choice value");
         name.setNullRepresentation("");
         mainFormLayout.addComponent(name);
-
-        QType = new MyQTypeComboBox();
-        QType.setCaption("Question Type");
-        mainFormLayout.addComponent(QType);
 
         saveButton = buildSaveButton();
         mainFormLayout.addComponent(saveButton);
 
         deleteButton = buildDeleteButton();
         mainFormLayout.addComponent(deleteButton);
-
     }
 
     private MySaveButton buildSaveButton() {
@@ -112,10 +107,10 @@ public class QuestionWindow extends Window {
             public void buttonClick(Button.ClickEvent clickEvent) {
                 try {
                     binder.commit();
-                    Question question = questionBeanItem.getBean();
-                    question.setPanel(myPanel);
-                    questionService = new QuestionService();
-                    questionService.saveQuestion(question);
+                    Choice choice = choiceBeanItem.getBean();
+                    choice.setQuestion(question);
+                    choiceService = new ChoiceService();
+                    choiceService.saveChoice(choice);
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }
@@ -132,10 +127,9 @@ public class QuestionWindow extends Window {
             public void buttonClick(Button.ClickEvent clickEvent) {
                 try {
                     binder.commit();
-                    Question question = questionBeanItem.getBean();
-                    question.setPanel(myPanel);
-                    questionService = new QuestionService();
-                    questionService.deleteQuestion(question);
+                    Choice choice = choiceBeanItem.getBean();
+                    choiceService = new ChoiceService();
+                    choiceService.deleteChoice(choice);
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }
@@ -143,4 +137,5 @@ public class QuestionWindow extends Window {
         });
         return deleteButton;
     }
+
 }

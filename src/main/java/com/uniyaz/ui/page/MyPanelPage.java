@@ -1,7 +1,11 @@
 package com.uniyaz.ui.page;
 
+import com.sun.xml.internal.rngom.parse.host.Base;
+import com.uniyaz.core.domain.Choice;
 import com.uniyaz.core.domain.MyPanel;
+import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.domain.Survey;
+import com.uniyaz.core.service.ChoiceService;
 import com.uniyaz.core.service.PanelService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.ContentComponent;
@@ -15,7 +19,7 @@ import com.vaadin.ui.*;
 
 import java.util.List;
 
-public class MyPanelPage extends VerticalLayout {
+public class MyPanelPage extends BasePage {
 
     private Survey survey;
     private Button addPanel;
@@ -38,21 +42,23 @@ public class MyPanelPage extends VerticalLayout {
 
         setSizeFull();
         buildMainLayout();
-        addComponent(mainFormLayout);
-        setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
 
-        fillTable();
-
+        fillPageBySurvey(survey);
     }
 
-    private void buildMainLayout() {
+    @Override
+    public void buildMainLayout() {
 
         mainFormLayout = new FormLayout();
         mainFormLayout.setSizeUndefined();
 
+
+        addComponent(mainFormLayout);
+        setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
+/*
         Label surveyTitle = new Label();
         surveyTitle.setValue("Survey: "+survey.getName());
-        mainFormLayout.addComponent(surveyTitle);
+        mainFormLayout.addComponent(surveyTitle);*/
 
         buildTable();
         mainFormLayout.addComponent(table);
@@ -80,12 +86,22 @@ public class MyPanelPage extends VerticalLayout {
         container.addContainerProperty("update", MyEditButton.class, null);
     }
 
-    private void fillTable() {
+
+    public void fillPageBySurvey(Survey survey) {
+
+        this.survey = survey;
 
         PanelService panelService = new PanelService();
-        if(panelService.listPanelsById(survey) !=null){
-            List<MyPanel> panelList =panelService.listPanelsById(survey);
-            for (MyPanel myPanel : panelList) {
+
+        List<MyPanel> panelList =panelService.listPanelsById(survey);
+        fillTable(panelList);
+    }
+
+    private void fillTable(List<MyPanel> myPanelList) {
+
+        if(myPanelList !=null){
+            container.removeAllItems();
+            for (MyPanel myPanel : myPanelList) {
                 Item item = container.addItem(myPanel);
                 item.getItemProperty("id").setValue(myPanel.getId());
                 item.getItemProperty("name").setValue(myPanel.getName());
@@ -105,6 +121,12 @@ public class MyPanelPage extends VerticalLayout {
                 MyUI myUI = (MyUI) UI.getCurrent();
                 PanelWindow panelWindow = new PanelWindow(myPanel,survey);
                 myUI.addWindow(panelWindow);
+                panelWindow.addCloseListener(new Window.CloseListener() {
+                    @Override
+                    public void windowClose(Window.CloseEvent closeEvent) {
+                        fillPageBySurvey(survey);
+                    }
+                });
             }
         });
         return myEditButton;
@@ -119,27 +141,16 @@ public class MyPanelPage extends VerticalLayout {
                 MyUI myUI = (MyUI) UI.getCurrent();
                 PanelWindow panelWindow = new PanelWindow(survey);
                 myUI.addWindow(panelWindow);
+                panelWindow.addCloseListener(new Window.CloseListener() {
+                    @Override
+                    public void windowClose(Window.CloseEvent closeEvent) {
+                        fillPageBySurvey(survey);
+                    }
+                });
             }
         });
         return myAddButton;
     }
-
-    private MySaveButton buildAddQuestionButton(MyPanel myPanel) {
-        MySaveButton mySaveButton = new MySaveButton();
-        mySaveButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-
-                MyUI myUI = (MyUI) UI.getCurrent();
-                ContentComponent contentComponent = myUI.getContentComponent();
-
-                MyQuestionPage myQuestionPage = new MyQuestionPage(myPanel);
-                contentComponent.addComponent(myQuestionPage);
-            }
-        });
-        return mySaveButton;
-    }
-
 
     public Table getTable() {
         return table;

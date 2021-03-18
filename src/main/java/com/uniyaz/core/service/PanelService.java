@@ -18,6 +18,11 @@ public class PanelService {
         panelDao.savePanel(panel);
     }
 
+    public void deletePanel(MyPanel panel) {
+        panelDao = new PanelDao();
+        panelDao.deletePanel(panel);
+    }
+
     public List<MyPanel> listPanels() {
         panelDao = new PanelDao();
         return panelDao.listPanels();
@@ -27,4 +32,5 @@ public class PanelService {
         panelDao = new PanelDao();
         return panelDao.listPanelsById(survey);
     }
+
 }

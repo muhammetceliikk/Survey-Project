@@ -18,8 +18,14 @@ public class SurveyService {
         surveyDao.saveSurvey(survey);
     }
 
+    public void deleteSurvey(Survey survey) {
+        surveyDao = new SurveyDao();
+        surveyDao.deleteSurvey(survey);
+    }
+
     public List<Survey> listSurveys() {
         surveyDao = new SurveyDao();
         return surveyDao.listSurveys();
     }
+
 }

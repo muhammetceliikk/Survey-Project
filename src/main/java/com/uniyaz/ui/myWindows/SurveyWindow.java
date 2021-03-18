@@ -1,9 +1,12 @@
 package com.uniyaz.ui.myWindows;
 
+import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.domain.Survey;
+import com.uniyaz.core.service.QuestionService;
 import com.uniyaz.core.service.SurveyService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.ContentComponent;
+import com.uniyaz.ui.component.MyDeleteButton;
 import com.uniyaz.ui.component.MySaveButton;
 import com.uniyaz.ui.page.MyTabSheet;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -26,6 +29,7 @@ public class SurveyWindow extends Window {
     private BeanItem<Survey> surveyBeanItem;
     private FieldGroup binder;
     private MySaveButton saveButton;
+    private MyDeleteButton deleteButton;
 
     public SurveyWindow() {
         this(new Survey());
@@ -72,6 +76,9 @@ public class SurveyWindow extends Window {
 
         saveButton = buildSaveButton();
         mainFormLayout.addComponent(saveButton);
+
+        deleteButton = buildDeleteButton();
+        mainFormLayout.addComponent(deleteButton);
     }
 
     private MySaveButton buildSaveButton() {
@@ -101,5 +108,33 @@ public class SurveyWindow extends Window {
             }
         });
         return saveButton;
+    }
+
+    private MyDeleteButton buildDeleteButton() {
+
+        deleteButton= new MyDeleteButton();
+        deleteButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                try {
+                    binder.commit();
+                    Survey survey = surveyBeanItem.getBean();
+                    surveyService = new SurveyService();
+                    surveyService.deleteSurvey(survey);
+
+                    close();
+
+                    MyUI myUI = (MyUI) UI.getCurrent();
+                    ContentComponent contentComponent = myUI.getContentComponent();
+
+                    //contette tabsheet var.belki tabsheetin içindeki surveyin tableını reslersin.
+                    MyTabSheet myTabSheet = new MyTabSheet();
+                    contentComponent.addComponent(myTabSheet);
+                } catch (FieldGroup.CommitException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return deleteButton;
     }
 }

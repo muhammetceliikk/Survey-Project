@@ -63,17 +63,18 @@ public class SurveyListPage extends VerticalLayout {
     private void fillTable() {
 
         SurveyService surveyService = new SurveyService();
+
         List<Survey> surveyList = surveyService.listSurveys();
-        for (Survey survey : surveyList) {
-            Item item = container.addItem(survey);
-            item.getItemProperty("id").setValue(survey.getId());
-            item.getItemProperty("name").setValue(survey.getName());
+        if(surveyList !=null) {
+            for (Survey survey : surveyList) {
+                Item item = container.addItem(survey);
+                item.getItemProperty("id").setValue(survey.getId());
+                item.getItemProperty("name").setValue(survey.getName());
 
-            MyEditButton myEditButton = buildEditButton(survey);
-            item.getItemProperty("update").setValue(myEditButton);
-
+                MyEditButton myEditButton = buildEditButton(survey);
+                item.getItemProperty("update").setValue(myEditButton);
+            }
         }
-
     }
 
     private MyEditButton buildEditButton(Survey survey) {

@@ -18,6 +18,11 @@ public class QuestionService {
         questionDao.saveQuestion(question);
     }
 
+    public void deleteQuestion(Question question) {
+        questionDao = new QuestionDao();
+        questionDao.deleteQuestion(question);
+    }
+
     public List<Question> listQuestions() {
         questionDao = new QuestionDao();
         return questionDao.listQuestions();
@@ -27,5 +32,5 @@ public class QuestionService {
         questionDao = new QuestionDao();
         return questionDao.listQuestionsById(myPanel);
     }
-    
+
 }

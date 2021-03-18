@@ -1,15 +1,25 @@
 package com.uniyaz.ui.page;
 
+import com.sun.xml.internal.rngom.parse.host.Base;
 import com.uniyaz.core.domain.Choice;
 import com.uniyaz.core.domain.EnumQType;
+import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Question;
+import com.uniyaz.core.service.ChoiceService;
+import com.uniyaz.core.service.PanelService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.MyAddButton;
 import com.uniyaz.ui.component.MyEditButton;
+import com.uniyaz.ui.myWindows.ChoiceWindow;
+import com.uniyaz.ui.myWindows.PanelWindow;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.*;
 
-public class MyChoicePage extends VerticalLayout {
+import java.util.List;
+import java.util.zip.Adler32;
+
+public class MyChoicePage extends BasePage {
 
     private Question question;
     private MyAddButton addChoice;
@@ -32,20 +42,22 @@ public class MyChoicePage extends VerticalLayout {
 
         setSizeFull();
         buildMainLayout();
-        addComponent(mainFormLayout);
-        setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
 
-        //fillTable();
+        fillPageByQuestion(question);
     }
 
-    private void buildMainLayout() {
+    @Override
+    public void buildMainLayout() {
 
         mainFormLayout = new FormLayout();
         mainFormLayout.setSizeUndefined();
 
+        addComponent(mainFormLayout);
+        setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
+/*
         Label questionTitle = new Label();
         questionTitle.setValue("Question: "+question.getName());
-        mainFormLayout.addComponent(questionTitle);
+        mainFormLayout.addComponent(questionTitle);*/
 
         buildTable();
         mainFormLayout.addComponent(table);
@@ -62,7 +74,7 @@ public class MyChoicePage extends VerticalLayout {
 
         buildContainer();
         table.setContainerDataSource(container);
-        table.setColumnHeaders("ID", "NAME", "Question Type", "Edit");
+        table.setColumnHeaders("ID", "VALUE", "Edit");
     }
 
     private void buildContainer() {
@@ -70,8 +82,50 @@ public class MyChoicePage extends VerticalLayout {
         container = new IndexedContainer();
         container.addContainerProperty("id", Long.class, null);
         container.addContainerProperty("name", String.class, null);
-        container.addContainerProperty("question type", EnumQType.class, null);
         container.addContainerProperty("update", MyEditButton.class, null);
+    }
+
+    public void fillPageByQuestion(Question question) {
+        this.question = question;
+
+        ChoiceService choiceService = new ChoiceService();
+        List<Choice> choiceList =choiceService.listChoicesById(question);
+        fillTable(choiceList);
+    }
+
+    private void fillTable(List<Choice> choiceList) {
+
+        if(choiceList !=null){
+            container.removeAllItems();
+            for (Choice choice : choiceList) {
+                Item item = container.addItem(choice);
+                item.getItemProperty("id").setValue(choice.getId());
+                item.getItemProperty("name").setValue(choice.getName());
+
+                MyEditButton myEditButton = buildEditButton(choice);
+                item.getItemProperty("update").setValue(myEditButton);
+            }
+        }
+    }
+
+    private MyEditButton buildEditButton(Choice choice) {
+        MyEditButton myEditButton = new MyEditButton();
+        myEditButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+
+                MyUI myUI = (MyUI) UI.getCurrent();
+                ChoiceWindow choiceWindow = new ChoiceWindow(choice,question);
+                myUI.addWindow(choiceWindow);
+                choiceWindow.addCloseListener(new Window.CloseListener() {
+                    @Override
+                    public void windowClose(Window.CloseEvent closeEvent) {
+                        fillPageByQuestion(question);
+                    }
+                });
+            }
+        });
+        return myEditButton;
     }
 
     private MyAddButton buildAddChoiceButton() {
@@ -80,11 +134,21 @@ public class MyChoicePage extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
-                MyUI myUI = (MyUI) UI.getCurrent();/*
-                QuestionWindow questionWindow = new QuestionWindow(myPanel);
-                myUI.addWindow(questionWindow);*/
+                MyUI myUI = (MyUI) UI.getCurrent();
+                ChoiceWindow choiceWindow = new ChoiceWindow(question);
+                myUI.addWindow(choiceWindow);
+                choiceWindow.addCloseListener(new Window.CloseListener() {
+                    @Override
+                    public void windowClose(Window.CloseEvent closeEvent) {
+                        fillPageByQuestion(question);
+                    }
+                });
             }
         });
         return myAddButton;
+    }
+
+    public Table getTable() {
+        return table;
     }
 }

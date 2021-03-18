@@ -24,6 +24,17 @@ public class QuestionDao {
         }
     }
 
+    public void deleteQuestion(Question question) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.delete(question);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Question> listQuestions() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
@@ -53,4 +64,5 @@ public class QuestionDao {
         }
         return null;
     }
+
 }

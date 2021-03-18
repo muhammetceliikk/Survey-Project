@@ -45,8 +45,9 @@ public class SurveyStartPage extends VerticalLayout {
         ComboBox comboBox = new ComboBox();
         comboBox.setCaption("Select survey");
         SurveyService surveyService = new SurveyService();
-        if(surveyService.listSurveys()!=null){
-            List<Survey> surveyList =surveyService.listSurveys();
+
+        List<Survey> surveyList=surveyService.listSurveys();
+        if(surveyList!=null){
             for (Survey survey : surveyList) {
                 comboBox.addItem(survey);
                 comboBox.setItemCaption(survey,survey.getName());

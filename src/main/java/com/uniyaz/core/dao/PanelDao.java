@@ -24,6 +24,17 @@ public class PanelDao {
         }
     }
 
+    public void deletePanel(MyPanel panel) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.delete(panel);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<MyPanel> listPanels() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
@@ -53,4 +64,5 @@ public class PanelDao {
         }
         return null;
     }
+
 }

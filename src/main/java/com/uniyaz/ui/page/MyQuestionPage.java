@@ -3,6 +3,8 @@ package com.uniyaz.ui.page;
 import com.uniyaz.core.domain.EnumQType;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Question;
+import com.uniyaz.core.domain.Survey;
+import com.uniyaz.core.service.PanelService;
 import com.uniyaz.core.service.QuestionService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.*;
@@ -13,7 +15,7 @@ import com.vaadin.ui.*;
 
 import java.util.List;
 
-public class MyQuestionPage extends VerticalLayout {
+public class MyQuestionPage extends BasePage {
 
     private MyPanel myPanel;
     private MyAddButton addQuestion;
@@ -36,20 +38,23 @@ public class MyQuestionPage extends VerticalLayout {
 
         setSizeFull();
         buildMainLayout();
-        addComponent(mainFormLayout);
-        setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
 
-        fillTable();
+        fillPageByPanel(myPanel);
     }
 
-    private void buildMainLayout() {
+    @Override
+    public void buildMainLayout() {
 
         mainFormLayout = new FormLayout();
         mainFormLayout.setSizeUndefined();
 
-        Label panelTitle = new Label();
-        panelTitle.setValue("Panel: "+myPanel.getName());
-        mainFormLayout.addComponent(panelTitle);
+        addComponent(mainFormLayout);
+        setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
+
+//
+//        Label panelTitle = new Label();
+//        panelTitle.setValue("Panel: "+myPanel.getName());
+//        mainFormLayout.addComponent(panelTitle);
 
         buildTable();
         mainFormLayout.addComponent(table);
@@ -78,11 +83,20 @@ public class MyQuestionPage extends VerticalLayout {
         container.addContainerProperty("update", MyEditButton.class, null);
     }
 
-    private void fillTable() {
+
+    public void fillPageByPanel(MyPanel myPanel) {
+        this.myPanel= myPanel;
 
         QuestionService questionService = new QuestionService();
-        if(questionService.listQuestionById(myPanel) !=null){
-            List<Question> questionList =questionService.listQuestionById(myPanel);
+
+        List<Question> questionList =questionService.listQuestionById(myPanel);
+        fillTable(questionList);
+    }
+
+    private void fillTable(List<Question> questionList) {
+
+        if(questionList!=null){
+            container.removeAllItems();
             for (Question question : questionList) {
                 Item item = container.addItem(question);
                 item.getItemProperty("id").setValue(question.getId());
@@ -91,7 +105,6 @@ public class MyQuestionPage extends VerticalLayout {
 
                 MyEditButton myEditButton = buildEditButton(question);
                 item.getItemProperty("update").setValue(myEditButton);
-
             }
         }
     }
@@ -105,6 +118,12 @@ public class MyQuestionPage extends VerticalLayout {
                 MyUI myUI = (MyUI) UI.getCurrent();
                 QuestionWindow questionWindow = new QuestionWindow(question,myPanel);
                 myUI.addWindow(questionWindow);
+                questionWindow.addCloseListener(new Window.CloseListener() {
+                    @Override
+                    public void windowClose(Window.CloseEvent closeEvent) {
+                        fillPageByPanel(myPanel);
+                    }
+                });
             }
         });
         return myEditButton;
@@ -119,25 +138,15 @@ public class MyQuestionPage extends VerticalLayout {
                 MyUI myUI = (MyUI) UI.getCurrent();
                 QuestionWindow questionWindow = new QuestionWindow(myPanel);
                 myUI.addWindow(questionWindow);
+                questionWindow.addCloseListener(new Window.CloseListener() {
+                    @Override
+                    public void windowClose(Window.CloseEvent closeEvent) {
+                        fillPageByPanel(myPanel);
+                    }
+                });
             }
         });
         return myAddButton;
-    }
-
-    private MySaveButton buildAddChoiceButton(Question question) {
-        MySaveButton mySaveButton = new MySaveButton();
-        mySaveButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-
-                MyUI myUI = (MyUI) UI.getCurrent();
-                ContentComponent contentComponent = myUI.getContentComponent();
-/*
-                MyChoicePage myChoicePage = new MyChoicePage(question);
-                contentComponent.addComponent(myChoicePage);*/
-            }
-        });
-        return mySaveButton;
     }
 
     public Table getTable() {
