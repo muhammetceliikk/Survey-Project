@@ -1,7 +1,7 @@
 package com.uniyaz.ui.component;
 
 import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.page.MyTabSheet;
+import com.uniyaz.ui.page.FilledSurveysPage;
 import com.uniyaz.ui.page.SurveyStartPage;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.UI;
@@ -12,7 +12,7 @@ public class MyMenuBar extends com.vaadin.ui.MenuBar {
     private ContentComponent contentComponent;
 
     public MyMenuBar() {
-        setSizeFull();
+        setSizeUndefined();
 
         MyUI myUI = (MyUI) UI.getCurrent();
         contentComponent = myUI.getContentComponent();
@@ -36,9 +36,10 @@ public class MyMenuBar extends com.vaadin.ui.MenuBar {
             }
         });
 
-        MenuItem showSolvedSurveys = addItem("Solved Surveys", FontAwesome.PLUS,new Command() {
+        MenuItem showFilledSurveys = addItem("Filled Surveys", FontAwesome.PLUS, new Command() {
             @Override
             public void menuSelected(MenuItem menuItem) {
+                contentComponent.addComponent(new FilledSurveysPage());
             }
         });
 

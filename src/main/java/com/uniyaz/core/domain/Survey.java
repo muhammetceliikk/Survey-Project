@@ -1,6 +1,7 @@
 package com.uniyaz.core.domain;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "SURVEY")
@@ -33,5 +34,19 @@ public class Survey extends BaseEntity{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Survey survey = (Survey) o;
+        return Objects.equals(id, survey.id) && Objects.equals(name, survey.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id, name);
     }
 }

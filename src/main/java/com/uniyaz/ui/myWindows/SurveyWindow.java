@@ -1,14 +1,12 @@
 package com.uniyaz.ui.myWindows;
 
-import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.domain.Survey;
-import com.uniyaz.core.service.QuestionService;
 import com.uniyaz.core.service.SurveyService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.ContentComponent;
 import com.uniyaz.ui.component.MyDeleteButton;
 import com.uniyaz.ui.component.MySaveButton;
-import com.uniyaz.ui.page.MyTabSheet;
+import com.uniyaz.ui.component.MyTabSheet;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
@@ -74,11 +72,17 @@ public class SurveyWindow extends Window {
         name.setNullRepresentation("");
         mainFormLayout.addComponent(name);
 
-        saveButton = buildSaveButton();
-        mainFormLayout.addComponent(saveButton);
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(true);
+        mainFormLayout.addComponent(buttonLayout);
 
-        deleteButton = buildDeleteButton();
-        mainFormLayout.addComponent(deleteButton);
+        saveButton = buildSaveButton();
+        buttonLayout.addComponent(saveButton);
+
+        if (surveyBeanItem.getBean().getId() != null) {
+            deleteButton = buildDeleteButton();
+            buttonLayout.addComponent(deleteButton);
+        }
     }
 
     private MySaveButton buildSaveButton() {

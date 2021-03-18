@@ -1,23 +1,17 @@
 package com.uniyaz.ui.page;
 
-import com.sun.xml.internal.rngom.parse.host.Base;
 import com.uniyaz.core.domain.Choice;
-import com.uniyaz.core.domain.EnumQType;
-import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.service.ChoiceService;
-import com.uniyaz.core.service.PanelService;
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.component.MyAddButton;
 import com.uniyaz.ui.component.MyEditButton;
 import com.uniyaz.ui.myWindows.ChoiceWindow;
-import com.uniyaz.ui.myWindows.PanelWindow;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.*;
 
 import java.util.List;
-import java.util.zip.Adler32;
 
 public class MyChoicePage extends BasePage {
 
@@ -54,10 +48,6 @@ public class MyChoicePage extends BasePage {
 
         addComponent(mainFormLayout);
         setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
-/*
-        Label questionTitle = new Label();
-        questionTitle.setValue("Question: "+question.getName());
-        mainFormLayout.addComponent(questionTitle);*/
 
         buildTable();
         mainFormLayout.addComponent(table);

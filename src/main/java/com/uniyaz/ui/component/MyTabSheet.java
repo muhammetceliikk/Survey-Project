@@ -1,10 +1,11 @@
-package com.uniyaz.ui.page;
+package com.uniyaz.ui.component;
 
-import com.uniyaz.core.domain.Choice;
-import com.uniyaz.core.domain.MyPanel;
-import com.uniyaz.core.domain.Question;
-import com.uniyaz.core.domain.Survey;
+import com.uniyaz.core.domain.*;
 import com.uniyaz.ui.MyUI;
+import com.uniyaz.ui.page.MyChoicePage;
+import com.uniyaz.ui.page.MyPanelPage;
+import com.uniyaz.ui.page.MyQuestionPage;
+import com.uniyaz.ui.page.SurveyListPage;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.*;
 
@@ -89,7 +90,7 @@ public class MyTabSheet extends VerticalLayout {
                         }
                         break;
                     case "Choice":
-                        if(question!=null){
+                        if(question!=null && !(EnumQType.TextField.equals(question.getQType())) && !(EnumQType.DateField.equals(question.getQType()))){
                             myChoicePage.getTable().addItemClickListener(new ItemClickEvent.ItemClickListener() {
                                 @Override
                                 public void itemClick(ItemClickEvent itemClickEvent) {
@@ -98,7 +99,7 @@ public class MyTabSheet extends VerticalLayout {
                             });
                         }
                         else{
-                            Notification.show("You must choose a panel to access question.");
+                            Notification.show("You must choose a question to access choice.\nOr Your Question type should not be Textfield or Datafield");
                             tabSheet.setSelectedTab(questionTab);
                         }
                         break;
@@ -110,10 +111,11 @@ public class MyTabSheet extends VerticalLayout {
     private void addTabs() {
         // Survey
         surveyListPage = new SurveyListPage();
+        surveyListPage.setSizeUndefined();
 
         surveyTab = new VerticalLayout();
-        surveyTab.setSizeFull();
         surveyTab.addComponent(surveyListPage);
+        surveyTab.setComponentAlignment(surveyListPage,Alignment.MIDDLE_CENTER);
         tabsheet.addTab(surveyTab,"Survey");
 
         surveyListPage.getTable().addItemClickListener(new ItemClickEvent.ItemClickListener() {

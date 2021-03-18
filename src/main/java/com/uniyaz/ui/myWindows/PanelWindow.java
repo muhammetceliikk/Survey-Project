@@ -86,11 +86,17 @@ public class PanelWindow extends Window {
         name.setNullRepresentation("");
         mainFormLayout.addComponent(name);
 
-        saveButton = buildSaveButton();
-        mainFormLayout.addComponent(saveButton);
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(true);
+        mainFormLayout.addComponent(buttonLayout);
 
-        deleteButton = buildDeleteButton();
-        mainFormLayout.addComponent(deleteButton);
+        saveButton = buildSaveButton();
+        buttonLayout.addComponent(saveButton);
+
+        if (panelBeanItem.getBean().getId() != null) {
+            deleteButton = buildDeleteButton();
+            buttonLayout.addComponent(deleteButton);
+        }
     }
 
     private MySaveButton buildSaveButton() {

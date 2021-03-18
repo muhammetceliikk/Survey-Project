@@ -1,17 +1,11 @@
 package com.uniyaz.ui.page;
 
-import com.sun.xml.internal.rngom.parse.host.Base;
-import com.uniyaz.core.domain.Choice;
 import com.uniyaz.core.domain.MyPanel;
-import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.domain.Survey;
-import com.uniyaz.core.service.ChoiceService;
 import com.uniyaz.core.service.PanelService;
 import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.component.ContentComponent;
 import com.uniyaz.ui.component.MyAddButton;
 import com.uniyaz.ui.component.MyEditButton;
-import com.uniyaz.ui.component.MySaveButton;
 import com.uniyaz.ui.myWindows.PanelWindow;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -52,13 +46,8 @@ public class MyPanelPage extends BasePage {
         mainFormLayout = new FormLayout();
         mainFormLayout.setSizeUndefined();
 
-
         addComponent(mainFormLayout);
         setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
-/*
-        Label surveyTitle = new Label();
-        surveyTitle.setValue("Survey: "+survey.getName());
-        mainFormLayout.addComponent(surveyTitle);*/
 
         buildTable();
         mainFormLayout.addComponent(table);

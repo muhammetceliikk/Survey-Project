@@ -7,12 +7,13 @@ import com.vaadin.ui.ComboBox;
 public class MyQTypeComboBox extends ComboBox {
 
     public MyQTypeComboBox() {
+        setNullSelectionAllowed(false);
         fillCombobox();
     }
 
     public void fillCombobox() {
         for (EnumQType enumQType : EnumQType.values()) {
-            Item item = addItem(enumQType);
+            addItem(enumQType);
         }
     }
 }

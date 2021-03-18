@@ -6,11 +6,7 @@ import com.uniyaz.ui.page.SurveyStartPage;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -42,6 +38,7 @@ public class MyUI extends UI {
 
         MyMenuBar myMenuBar = new MyMenuBar();
         mainLayout.addComponent(myMenuBar);
+        mainLayout.setComponentAlignment(myMenuBar, Alignment.MIDDLE_CENTER);
 
         mainLayout.addComponent(contentComponent);
 

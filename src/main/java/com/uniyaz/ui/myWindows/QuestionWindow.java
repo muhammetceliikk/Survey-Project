@@ -3,12 +3,9 @@ package com.uniyaz.ui.myWindows;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.service.QuestionService;
-import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.component.ContentComponent;
 import com.uniyaz.ui.component.MyDeleteButton;
 import com.uniyaz.ui.component.MyQTypeComboBox;
 import com.uniyaz.ui.component.MySaveButton;
-import com.uniyaz.ui.page.MyTabSheet;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
@@ -97,11 +94,17 @@ public class QuestionWindow extends Window {
         QType.setCaption("Question Type");
         mainFormLayout.addComponent(QType);
 
-        saveButton = buildSaveButton();
-        mainFormLayout.addComponent(saveButton);
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.setSpacing(true);
+        mainFormLayout.addComponent(buttonLayout);
 
-        deleteButton = buildDeleteButton();
-        mainFormLayout.addComponent(deleteButton);
+        saveButton = buildSaveButton();
+        buttonLayout.addComponent(saveButton);
+
+        if (questionBeanItem.getBean().getId() != null) {
+            deleteButton = buildDeleteButton();
+            buttonLayout.addComponent(deleteButton);
+        }
 
     }
 
