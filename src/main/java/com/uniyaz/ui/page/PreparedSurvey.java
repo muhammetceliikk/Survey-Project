@@ -16,7 +16,6 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.List;
 
-
 public class PreparedSurvey extends Window {
 
     private PanelService panelService;
@@ -38,7 +37,10 @@ public class PreparedSurvey extends Window {
     private Label panelName;
     private Label questionName;
 
-    public PreparedSurvey(Survey survey) {
+    private String mail;
+
+    public PreparedSurvey(Survey survey, String mail) {
+        this.mail = mail;
         this.survey = survey;
         buildMainLayout();
     }
@@ -86,10 +88,11 @@ public class PreparedSurvey extends Window {
                     case TextField:
                         choiceLayout = new HorizontalLayout();
                         choiceLayout.setSpacing(true);
-                        choiceTextField= new TextField();
+                        choiceTextField = new TextField();
                         choiceLayout.addComponent(choiceTextField);
                         questionLayout.addComponent(choiceLayout);
                         break;
+
                     case DateField:
                         choiceLayout = new HorizontalLayout();
                         choiceLayout.setSpacing(true);
@@ -97,6 +100,7 @@ public class PreparedSurvey extends Window {
                         choiceLayout.addComponent(choiceDateField);
                         questionLayout.addComponent(choiceLayout);
                         break;
+
                     case Single_Choice:
                         choiceService = new ChoiceService();
                         List<Choice> choiceList = choiceService.listChoicesById(question);
@@ -110,6 +114,7 @@ public class PreparedSurvey extends Window {
                             questionLayout.addComponent(choiceLayout);
                         }
                         break;
+
                     case Multiple_Choice:
                         choiceService = new ChoiceService();
                         List<Choice> choiceList2 = choiceService.listChoicesById(question);

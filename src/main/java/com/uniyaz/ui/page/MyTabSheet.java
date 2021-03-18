@@ -125,9 +125,6 @@ public class MyTabSheet extends VerticalLayout {
                 myPanel=null;
                 question=null;
                 choice=null;
-
-                MyUI myUI = (MyUI) UI.getCurrent();
-                myUI.addWindow(new PreparedSurvey(survey));
             }
         });
 
