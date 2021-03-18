@@ -111,6 +111,7 @@ public class ChoiceWindow extends Window {
                     choice.setQuestion(question);
                     choiceService = new ChoiceService();
                     choiceService.saveChoice(choice);
+                    close();
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }
@@ -130,6 +131,7 @@ public class ChoiceWindow extends Window {
                     Choice choice = choiceBeanItem.getBean();
                     choiceService = new ChoiceService();
                     choiceService.deleteChoice(choice);
+                    close();
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }

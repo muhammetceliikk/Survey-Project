@@ -2,7 +2,7 @@ package com.uniyaz.ui.component;
 
 import com.uniyaz.ui.MyUI;
 import com.uniyaz.ui.page.MyTabSheet;
-import com.uniyaz.ui.page.SurveyListPage;
+import com.uniyaz.ui.page.SurveyStartPage;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.UI;
 
@@ -21,21 +21,24 @@ public class MyMenuBar extends com.vaadin.ui.MenuBar {
     }
 
     private void buildSurveyMenuItem() {
-        MenuItem productTransactionsMenuItem = addItem("Survey Transactions", null);
-        productTransactionsMenuItem.addItem("Add Survey", FontAwesome.PLUS, new Command() {
+        MenuItem addListMenuItem = addItem("Add/List Survey", FontAwesome.PLUS,new Command() {
             @Override
             public void menuSelected(MenuItem menuItem) {
                 myTabSheet = new MyTabSheet();
-//                SurveyPage surveyPage = new SurveyPage();
                 contentComponent.addComponent(myTabSheet);
             }
         });
 
-        productTransactionsMenuItem.addItem("List Surveys", FontAwesome.LIST, new Command() {
+        MenuItem fillSurveyMenuItem = addItem("Fill Survey", FontAwesome.PLUS,new Command() {
             @Override
             public void menuSelected(MenuItem menuItem) {
-                SurveyListPage surveyListPage = new SurveyListPage();
-                contentComponent.addComponent(surveyListPage);
+                contentComponent.addComponent(new SurveyStartPage());
+            }
+        });
+
+        MenuItem showSolvedSurveys = addItem("Solved Surveys", FontAwesome.PLUS,new Command() {
+            @Override
+            public void menuSelected(MenuItem menuItem) {
             }
         });
 

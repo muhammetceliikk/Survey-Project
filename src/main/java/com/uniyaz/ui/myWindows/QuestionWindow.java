@@ -116,6 +116,7 @@ public class QuestionWindow extends Window {
                     question.setPanel(myPanel);
                     questionService = new QuestionService();
                     questionService.saveQuestion(question);
+                    close();
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }
@@ -136,6 +137,7 @@ public class QuestionWindow extends Window {
                     question.setPanel(myPanel);
                     questionService = new QuestionService();
                     questionService.deleteQuestion(question);
+                    close();
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }

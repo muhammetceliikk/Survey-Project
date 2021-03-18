@@ -28,4 +28,10 @@ public class SurveyService {
         return surveyDao.listSurveys();
     }
 
+
+    public Survey getServeyByID(Survey survey) {
+        surveyDao = new SurveyDao();
+        return surveyDao.getServeyByID(survey);
+    }
+
 }

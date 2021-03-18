@@ -47,4 +47,19 @@ public class SurveyDao {
         return null;
     }
 
+    public Survey getServeyByID(Survey survey) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            String hql =
+                    "Select     survey " +
+                            "From       Survey survey " +
+                            "where survey.id=:sid";
+            Query query = session.createQuery(hql);
+            query.setParameter("sid",survey.getId());
+            return (Survey) query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

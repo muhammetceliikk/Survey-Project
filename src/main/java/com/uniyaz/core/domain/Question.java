@@ -1,5 +1,8 @@
 package com.uniyaz.core.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,6 +23,7 @@ public class Question extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PANEL", foreignKey = @ForeignKey(name = "FK_QUESTION_PANEL"))
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private MyPanel myPanel;
 
     @Override

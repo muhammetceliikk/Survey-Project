@@ -10,6 +10,8 @@ import com.vaadin.ui.*;
 
 public class SurveyPage extends VerticalLayout {
 
+    private Panel panel;
+
     @PropertyId("id")
     private TextField id;
 

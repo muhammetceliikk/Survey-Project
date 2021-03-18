@@ -1,6 +1,8 @@
 package com.uniyaz.core.domain;
 
 public enum EnumQType {
-    ComboBox,
-    TextField
+    Multiple_Choice,
+    Single_Choice,
+    TextField,
+    DateField,
 }

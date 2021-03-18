@@ -3,12 +3,8 @@ package com.uniyaz.ui.myWindows;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.service.PanelService;
-import com.uniyaz.core.service.SurveyService;
-import com.uniyaz.ui.MyUI;
-import com.uniyaz.ui.component.ContentComponent;
 import com.uniyaz.ui.component.MyDeleteButton;
 import com.uniyaz.ui.component.MySaveButton;
-import com.uniyaz.ui.page.MyTabSheet;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
@@ -39,7 +35,7 @@ public class PanelWindow extends Window {
     }
 
     public PanelWindow(Survey survey) {
-        this(new MyPanel(),survey);
+        this(new MyPanel(), survey);
     }
 
     public PanelWindow(MyPanel myPanel, Survey survey) {
@@ -59,7 +55,7 @@ public class PanelWindow extends Window {
         verticalLayout.setSizeFull();
         verticalLayout.addComponent(mainFormLayout);
 
-        verticalLayout.setComponentAlignment(mainFormLayout,Alignment.MIDDLE_CENTER);
+        verticalLayout.setComponentAlignment(mainFormLayout, Alignment.MIDDLE_CENTER);
 
         setContent(verticalLayout);
 
@@ -98,7 +94,7 @@ public class PanelWindow extends Window {
     }
 
     private MySaveButton buildSaveButton() {
-        saveButton= new MySaveButton();
+        saveButton = new MySaveButton();
         saveButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
@@ -108,6 +104,7 @@ public class PanelWindow extends Window {
                     panel.setSurvey(survey);
                     panelService = new PanelService();
                     panelService.savePanel(panel);
+                    close();
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }
@@ -118,7 +115,7 @@ public class PanelWindow extends Window {
 
     private MyDeleteButton buildDeleteButton() {
 
-        deleteButton= new MyDeleteButton();
+        deleteButton = new MyDeleteButton();
         deleteButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
@@ -127,6 +124,7 @@ public class PanelWindow extends Window {
                     MyPanel myPanel = panelBeanItem.getBean();
                     panelService = new PanelService();
                     panelService.deletePanel(myPanel);
+                    close();
                 } catch (FieldGroup.CommitException e) {
                     e.printStackTrace();
                 }

@@ -2,7 +2,6 @@ package com.uniyaz.ui.page;
 
 import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.service.SurveyService;
-import com.uniyaz.ui.component.MyQTypeComboBox;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 

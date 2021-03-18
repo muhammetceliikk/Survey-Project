@@ -1,5 +1,8 @@
 package com.uniyaz.core.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +19,7 @@ public class Choice extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_QUESTION", foreignKey = @ForeignKey(name = "FK_CHOICE_QUESTION"))
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private Question question;
 
     public String getName() {

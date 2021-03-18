@@ -4,6 +4,7 @@ import com.uniyaz.core.domain.Choice;
 import com.uniyaz.core.domain.MyPanel;
 import com.uniyaz.core.domain.Question;
 import com.uniyaz.core.domain.Survey;
+import com.uniyaz.ui.MyUI;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.*;
 
@@ -124,6 +125,9 @@ public class MyTabSheet extends VerticalLayout {
                 myPanel=null;
                 question=null;
                 choice=null;
+
+                MyUI myUI = (MyUI) UI.getCurrent();
+                myUI.addWindow(new PreparedSurvey(survey));
             }
         });
 
