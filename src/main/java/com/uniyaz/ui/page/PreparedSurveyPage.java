@@ -43,6 +43,7 @@ public class PreparedSurveyPage extends Panel {
     private List<OptionGroup> singleChoices;
     private List<OptionGroup> multipleChoices;
     private List<Answer> answerList;
+    private List<Answer> deleteAnswerList;
     private boolean isFilled=false;
 
     MySaveButton mySaveButton;
@@ -56,6 +57,7 @@ public class PreparedSurveyPage extends Panel {
         AnswerService answerService = new AnswerService();
         List<Answer> filledSurvey = answerService.listAnswersByMail(mail, survey);
 
+        deleteAnswerList = new ArrayList<>();
         fillTable(filledSurvey);
 
     }
@@ -99,7 +101,13 @@ public class PreparedSurveyPage extends Panel {
                 AnswerService answerService = new AnswerService();
                 answerService.saveAnswer(answerList);
 
-                if(!isFilled){
+                if(isFilled){
+                    if(deleteAnswerList.size()>0){
+                        for (Answer answer : deleteAnswerList) {
+                            answerService.deleteAnswer(answer);
+                        }
+                    }
+                }else{
                     CustomerSurveyService customerSurveyService = new CustomerSurveyService();
                     CustomerSurvey customerSurvey = new CustomerSurvey();
                     customerSurvey.setSurvey(survey);
@@ -331,13 +339,15 @@ public class PreparedSurveyPage extends Panel {
 
         for (Object itemId : multipleChoice.getItemIds()) {
             Question question = (Question) multipleChoice.getData();
-            Choice itemChoice = (Choice) itemId;
-            multipleChoice.unselect(itemChoice);
+            Choice itemInGroup = (Choice) itemId;
+            multipleChoice.unselect(itemInGroup);
             for (Answer answer : filledSurvey) {
                 if(question.getId().equals(answer.getQuestion().getId())) {
                     Choice myChoice = answer.getChoice();
-                    if(itemChoice.getId().equals(myChoice.getId())){
-                        multipleChoice.select(itemChoice);
+                    if(itemInGroup.getId().equals(myChoice.getId())){
+                        deleteAnswerList.add(answer);
+                        multipleChoice.unselect(itemInGroup);
+                        multipleChoice.select(itemInGroup);
                         break;
                     }
                 }
