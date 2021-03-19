@@ -14,7 +14,7 @@ public class Choice extends BaseEntity{
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME",length = 70)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

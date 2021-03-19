@@ -14,7 +14,7 @@ public class MyPanel extends BaseEntity{
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME" ,length = 50)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

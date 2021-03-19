@@ -11,7 +11,7 @@ public class Answer extends BaseEntity{
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "MAIL")
+    @Column(name = "MAIL", length = 70)
     private String mail;
 
     @Column(name = "ID_QUESTION")

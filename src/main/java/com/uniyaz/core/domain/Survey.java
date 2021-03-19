@@ -20,7 +20,7 @@ public class Survey extends BaseEntity{
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", length = 100)
     private String name;
 
     @Override
