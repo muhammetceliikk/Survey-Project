@@ -2,6 +2,7 @@ package com.uniyaz.core.dao;
 
 import com.uniyaz.core.domain.Answer;
 import com.uniyaz.core.domain.Question;
+import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -66,4 +67,20 @@ public class AnswerDao {
         return null;
     }
 
+    public List<Answer> listAnswersByMail(String mail, Survey survey) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            String hql =
+                    "Select     answer " +
+                            "From       Answer answer "+
+                            "where answer.mail=:amail and answer.survey.id=:asid";
+            Query query = session.createQuery(hql);
+            query.setParameter("amail",mail);
+            query.setParameter("asid",survey.getId());
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

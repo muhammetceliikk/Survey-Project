@@ -13,6 +13,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -46,16 +47,27 @@ public class PreparedSurveyPage extends Panel {
     MySaveButton mySaveButton;
     private String mail;
 
+    public PreparedSurveyPage(Survey survey, String mail,boolean m) {
+        //for filled surveys
+        this(survey,mail);
+
+        AnswerService answerService = new AnswerService();
+        List<Answer> filledSurvey = answerService.listAnswersByMail(mail, survey);
+
+        fillTable(filledSurvey);
+        mySaveButton.setVisible(false);
+
+    }
 
     public PreparedSurveyPage(Survey survey) {
-
+        //see default survey
         this(survey,"");
 
         mySaveButton.setVisible(false);
     }
 
     public PreparedSurveyPage(Survey survey, String mail) {
-
+        //create free survey and fill
         this.mail = mail;
         this.survey = survey;
         buildMainLayout();
@@ -205,6 +217,7 @@ public class PreparedSurveyPage extends Panel {
     private void addAnswerstoList(){
         for (Object field : fields) {
             Answer answer = new Answer();
+            answer.setSurvey(survey);
             answer.setMail(mail);
             if(field instanceof TextField){
                 TextField textField = (TextField) field;
@@ -228,6 +241,7 @@ public class PreparedSurveyPage extends Panel {
         for (OptionGroup singleChoice : singleChoices) {
             Answer answer = new Answer();
             answer.setMail(mail);
+            answer.setSurvey(survey);
             Question question = (Question) singleChoice.getData();
             answer.setQuestion(question);
             Choice choice = (Choice) singleChoice.getValue();
@@ -241,6 +255,7 @@ public class PreparedSurveyPage extends Panel {
             while (iterator.hasNext()) {
                 Answer answer = new Answer();
                 answer.setMail(mail);
+                answer.setSurvey(survey);
                 Question question = (Question) multipleChoices.getData();
                 answer.setQuestion(question);
                 Choice choice = (Choice) iterator.next();
@@ -248,6 +263,49 @@ public class PreparedSurveyPage extends Panel {
                 answerList.add(answer);
             }
         }
+    }
 
+    private void fillTable(List<Answer> filledSurvey){
+        for (Object field : fields) {
+            if(field instanceof TextField){
+                TextField textField = (TextField) field;
+                Question question = (Question) textField.getData();
+                for (Answer answer : filledSurvey) {
+                    if(question.getId().equals(answer.getQuestion().getId())){
+                        textField.setValue(answer.getAnswer());
+                        break;
+                    }
+                }
+            }
+            else if(field instanceof DateField){
+                DateField dateField = (DateField) field;
+                Question question = (Question) dateField.getData();
+                for (Answer answer : filledSurvey) {
+                    if(question.getId().equals(answer.getQuestion().getId())){
+                        try {
+                            Date date=new SimpleDateFormat("MM/dd/yyyy").parse(answer.getAnswer());
+                            dateField.setValue(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+    /*    for (OptionGroup singleChoice : singleChoices) {
+            Question question = (Question) singleChoice.getData();
+            Choice choice = (Choice) singleChoice.getValue();
+        }
+
+        for (OptionGroup multipleChoices : multipleChoices) {
+            Collection selectedItems = (Collection) multipleChoices.getValue();
+            Iterator iterator = selectedItems.iterator();
+            while (iterator.hasNext()) {
+                Question question = (Question) multipleChoices.getData();
+                Choice choice = (Choice) iterator.next();
+            }
+        }*/
     }
 }

@@ -22,8 +22,20 @@ public class Answer extends BaseEntity{
     @JoinColumn(name = "ID_CHOICE", foreignKey = @ForeignKey(name = "FK_ANSWER_CHOICE"))
     private Choice choice ;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_SURVEY", foreignKey = @ForeignKey(name = "FK_ANSWER_SURVEY"))
+    private Survey survey ;
+
     @Column(name = "ANSWER")
     private String answer;
+
+    public Survey getSurvey() {
+        return survey;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+    }
 
     public Question getQuestion() {
         return question;
@@ -60,5 +72,16 @@ public class Answer extends BaseEntity{
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", mail='" + mail + '\'' +
+                ", question=" + question +
+                ", choice=" + choice +
+                ", answer='" + answer + '\'' +
+                '}';
     }
 }

@@ -70,7 +70,7 @@ public class MyQuestionPage extends BasePage {
 
         buildContainer();
         table.setContainerDataSource(container);
-        table.setColumnHeaders("ID", "NAME", "Question Type", "Edit");
+        table.setColumnHeaders("ID", "Question", "Question Type", "Edit");
     }
 
     private void buildContainer() {

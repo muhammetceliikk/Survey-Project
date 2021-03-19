@@ -3,6 +3,7 @@ package com.uniyaz.core.service;
 import com.uniyaz.core.dao.AnswerDao;
 import com.uniyaz.core.domain.Answer;
 import com.uniyaz.core.domain.Question;
+import com.uniyaz.core.domain.Survey;
 
 import java.util.List;
 
@@ -27,6 +28,11 @@ public class AnswerService {
     public List<Answer> listAnswers() {
         answerDao = new AnswerDao();
         return answerDao.listAnswers();
+    }
+
+    public List<Answer> listAnswersByMail(String mail, Survey survey){
+        answerDao = new AnswerDao();
+        return answerDao.listAnswersByMail(mail,survey);
     }
 
     public List<Answer> listAnswersById(Question question) {

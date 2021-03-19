@@ -1,5 +1,7 @@
 package com.uniyaz.ui.page;
 
+import com.uniyaz.core.dao.CustomerSurveyDao;
+import com.uniyaz.core.domain.CustomerSurvey;
 import com.uniyaz.core.domain.Survey;
 import com.uniyaz.core.service.SurveyService;
 import com.uniyaz.ui.MyUI;
@@ -81,12 +83,37 @@ public class SurveyStartPage extends VerticalLayout {
             public void buttonClick(Button.ClickEvent clickEvent) {
                 String mailString = mail.getValue();
 
+                boolean filled = false;
+
+                filled=checkUserFilledSurvey(filled,mailString);
+
                 MyUI myUI = (MyUI) UI.getCurrent();
                 ContentComponent contentComponent = myUI.getContentComponent();
-                contentComponent.addComponent(new PreparedSurveyPage(survey,mailString));
+
+                if (filled) {
+                    contentComponent.addComponent(new PreparedSurveyPage(survey,mailString,true));
+                }else{
+                    contentComponent.addComponent(new PreparedSurveyPage(survey,mailString));
+                }
+
+
             }
         });
 
         return startButton;
+    }
+
+    public boolean checkUserFilledSurvey(boolean filled,String mail){
+        CustomerSurveyDao customerSurveyDao = new CustomerSurveyDao();
+        List<CustomerSurvey> customerSurveysList = customerSurveyDao.listCustomerSurveysByMail(mail);
+        if(customerSurveysList!=null) {
+            for (CustomerSurvey customerSurvey : customerSurveysList) {
+                if(survey.getName().equals(customerSurvey.getSurvey().getName())){
+                    filled=true;
+                    break;
+                }
+            }
+        }
+        return filled;
     }
 }
