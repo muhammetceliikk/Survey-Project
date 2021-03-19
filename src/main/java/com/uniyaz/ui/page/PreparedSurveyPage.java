@@ -166,13 +166,13 @@ public class PreparedSurveyPage extends Panel {
 
     private void createTextField(Question question) {
         choiceTextField = new TextField();
-        choiceTextField.setId(String.valueOf(question.getId()));
+        choiceTextField.setData(question);
         fields.add(choiceTextField);
     }
 
     private void createDateField(Question question) {
         choiceDateField = new DateField();
-        choiceDateField.setId(String.valueOf(question.getId()));
+        choiceDateField.setData(question);
         fields.add(choiceDateField);
     }
 
@@ -184,7 +184,7 @@ public class PreparedSurveyPage extends Panel {
             multipleChoice.addItem(choice);
             multipleChoice.setItemCaption(choice,choice.getName());
             multipleChoice.setMultiSelect(true);
-            multipleChoice.setId(String.valueOf(question.getId()));
+            multipleChoice.setData(question);
         }
         multipleChoices.add(multipleChoice);
     }
@@ -197,7 +197,7 @@ public class PreparedSurveyPage extends Panel {
             singleChoice.addItem(choice);
             singleChoice.setItemCaption(choice,choice.getName());
             singleChoice.setMultiSelect(false);
-            singleChoice.setId(String.valueOf(question.getId()));
+            singleChoice.setData(question);
         }
         singleChoices.add(singleChoice);
     }
@@ -208,13 +208,15 @@ public class PreparedSurveyPage extends Panel {
             answer.setMail(mail);
             if(field instanceof TextField){
                 TextField textField = (TextField) field;
-                answer.setQuestionID(Long.parseLong(textField.getId()));
+                Question question = (Question) textField.getData();
+                answer.setQuestion(question);
                 answer.setAnswer(textField.getValue());
 
             }
             else if(field instanceof DateField){
                 DateField dateField = (DateField) field;
-                answer.setQuestionID(Long.parseLong(dateField.getId()));
+                Question question = (Question) dateField.getData();
+                answer.setQuestion(question);
                 Date date = dateField.getValue();
                 SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
                 String strDate = formatter.format(date);
@@ -226,9 +228,10 @@ public class PreparedSurveyPage extends Panel {
         for (OptionGroup singleChoice : singleChoices) {
             Answer answer = new Answer();
             answer.setMail(mail);
-            answer.setQuestionID(Long.parseLong(singleChoice.getId()));
+            Question question = (Question) singleChoice.getData();
+            answer.setQuestion(question);
             Choice choice = (Choice) singleChoice.getValue();
-            answer.setChoiceID(choice.getId());
+            answer.setChoice(choice);
             answerList.add(answer);
         }
 
@@ -238,9 +241,10 @@ public class PreparedSurveyPage extends Panel {
             while (iterator.hasNext()) {
                 Answer answer = new Answer();
                 answer.setMail(mail);
-                answer.setQuestionID(Long.parseLong(multipleChoices.getId()));
+                Question question = (Question) multipleChoices.getData();
+                answer.setQuestion(question);
                 Choice choice = (Choice) iterator.next();
-                answer.setChoiceID(choice.getId());
+                answer.setChoice(choice);
                 answerList.add(answer);
             }
         }

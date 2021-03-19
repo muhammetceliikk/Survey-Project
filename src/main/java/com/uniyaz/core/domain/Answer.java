@@ -14,29 +14,31 @@ public class Answer extends BaseEntity{
     @Column(name = "MAIL", length = 70)
     private String mail;
 
-    @Column(name = "ID_QUESTION")
-    private Long questionID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_QUESTION", foreignKey = @ForeignKey(name = "FK_ANSWER_QUESTION"))
+    private Question question;
 
-    @Column(name = "ID_CHOICE")
-    private Long choiceID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_CHOICE", foreignKey = @ForeignKey(name = "FK_ANSWER_CHOICE"))
+    private Choice choice ;
 
     @Column(name = "ANSWER")
     private String answer;
 
-    public Long getQuestionID() {
-        return questionID;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionID(Long questionID) {
-        this.questionID = questionID;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
-    public Long getChoiceID() {
-        return choiceID;
+    public Choice getChoice() {
+        return choice;
     }
 
-    public void setChoiceID(Long choiceID) {
-        this.choiceID = choiceID;
+    public void setChoice(Choice choice) {
+        this.choice = choice;
     }
 
     @Override
