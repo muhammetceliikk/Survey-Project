@@ -84,7 +84,6 @@ public class SurveyStartPage extends VerticalLayout {
                 String mailString = mail.getValue();
 
                 boolean filled = false;
-
                 filled=checkUserFilledSurvey(filled,mailString);
 
                 MyUI myUI = (MyUI) UI.getCurrent();
@@ -95,8 +94,6 @@ public class SurveyStartPage extends VerticalLayout {
                 }else{
                     contentComponent.addComponent(new PreparedSurveyPage(survey,mailString));
                 }
-
-
             }
         });
 

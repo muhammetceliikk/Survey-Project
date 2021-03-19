@@ -43,6 +43,7 @@ public class PreparedSurveyPage extends Panel {
     private List<OptionGroup> singleChoices;
     private List<OptionGroup> multipleChoices;
     private List<Answer> answerList;
+    private boolean isFilled=false;
 
     MySaveButton mySaveButton;
     private String mail;
@@ -51,11 +52,11 @@ public class PreparedSurveyPage extends Panel {
         //for filled surveys
         this(survey,mail);
 
+        this.isFilled=m;
         AnswerService answerService = new AnswerService();
         List<Answer> filledSurvey = answerService.listAnswersByMail(mail, survey);
 
         fillTable(filledSurvey);
-        mySaveButton.setVisible(false);
 
     }
 
@@ -92,16 +93,19 @@ public class PreparedSurveyPage extends Panel {
         mySaveButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                CustomerSurveyService customerSurveyService = new CustomerSurveyService();
-                CustomerSurvey customerSurvey = new CustomerSurvey();
-                customerSurvey.setSurvey(survey);
-                customerSurvey.setMail(mail);
-                customerSurveyService.saveCustomerSurvey(customerSurvey);
 
                 answerList = new ArrayList<>();
                 addAnswerstoList();
                 AnswerService answerService = new AnswerService();
                 answerService.saveAnswer(answerList);
+
+                if(!isFilled){
+                    CustomerSurveyService customerSurveyService = new CustomerSurveyService();
+                    CustomerSurvey customerSurvey = new CustomerSurvey();
+                    customerSurvey.setSurvey(survey);
+                    customerSurvey.setMail(mail);
+                    customerSurveyService.saveCustomerSurvey(customerSurvey);
+                }
 
                 MyUI myUI = (MyUI) UI.getCurrent();
                 ContentComponent contentComponent = myUI.getContentComponent();
@@ -188,19 +192,6 @@ public class PreparedSurveyPage extends Panel {
         fields.add(choiceDateField);
     }
 
-    private void createMultipleChoice(Question question) {
-        choiceService = new ChoiceService();
-        List<Choice> choiceList2 = choiceService.listChoicesById(question);
-        multipleChoice = new OptionGroup();
-        for (Choice choice : choiceList2) {
-            multipleChoice.addItem(choice);
-            multipleChoice.setItemCaption(choice,choice.getName());
-            multipleChoice.setMultiSelect(true);
-            multipleChoice.setData(question);
-        }
-        multipleChoices.add(multipleChoice);
-    }
-
     private void createSingleChoice(Question question) {
         choiceService = new ChoiceService();
         List<Choice> choiceList = choiceService.listChoicesById(question);
@@ -214,6 +205,19 @@ public class PreparedSurveyPage extends Panel {
         singleChoices.add(singleChoice);
     }
 
+    private void createMultipleChoice(Question question) {
+        choiceService = new ChoiceService();
+        List<Choice> choiceList2 = choiceService.listChoicesById(question);
+        multipleChoice = new OptionGroup();
+        for (Choice choice : choiceList2) {
+            multipleChoice.addItem(choice);
+            multipleChoice.setItemCaption(choice,choice.getName());
+            multipleChoice.setMultiSelect(true);
+            multipleChoice.setData(question);
+        }
+        multipleChoices.add(multipleChoice);
+    }
+
     private void addAnswerstoList(){
         for (Object field : fields) {
             Answer answer = new Answer();
@@ -222,6 +226,9 @@ public class PreparedSurveyPage extends Panel {
             if(field instanceof TextField){
                 TextField textField = (TextField) field;
                 Question question = (Question) textField.getData();
+                if(!Objects.isNull(textField.getId())){
+                    answer.setId(Long.parseLong(textField.getId()));
+                }
                 answer.setQuestion(question);
                 answer.setAnswer(textField.getValue());
 
@@ -230,6 +237,9 @@ public class PreparedSurveyPage extends Panel {
                 DateField dateField = (DateField) field;
                 Question question = (Question) dateField.getData();
                 answer.setQuestion(question);
+                if(!Objects.isNull(dateField.getId())){
+                    answer.setId(Long.parseLong(dateField.getId()));
+                }
                 Date date = dateField.getValue();
                 SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
                 String strDate = formatter.format(date);
@@ -244,6 +254,9 @@ public class PreparedSurveyPage extends Panel {
             answer.setSurvey(survey);
             Question question = (Question) singleChoice.getData();
             answer.setQuestion(question);
+            if(!Objects.isNull(singleChoice.getId())){
+                answer.setId(Long.parseLong(singleChoice.getId()));
+            }
             Choice choice = (Choice) singleChoice.getValue();
             answer.setChoice(choice);
             answerList.add(answer);
@@ -273,6 +286,8 @@ public class PreparedSurveyPage extends Panel {
                 for (Answer answer : filledSurvey) {
                     if(question.getId().equals(answer.getQuestion().getId())){
                         textField.setValue(answer.getAnswer());
+                        textField.setData(question);
+                        textField.setId(String.valueOf(answer.getId()));
                         break;
                     }
                 }
@@ -285,6 +300,8 @@ public class PreparedSurveyPage extends Panel {
                         try {
                             Date date=new SimpleDateFormat("MM/dd/yyyy").parse(answer.getAnswer());
                             dateField.setValue(date);
+                            dateField.setData(question);
+                            dateField.setId(String.valueOf(answer.getId()));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -294,18 +311,38 @@ public class PreparedSurveyPage extends Panel {
             }
         }
 
-    /*    for (OptionGroup singleChoice : singleChoices) {
+        for (OptionGroup singleChoice : singleChoices) {
             Question question = (Question) singleChoice.getData();
-            Choice choice = (Choice) singleChoice.getValue();
+            for (Answer answer : filledSurvey) {
+                if(question.getId().equals(answer.getQuestion().getId())) {
+                    Choice myChoice = answer.getChoice();
+                    for (Object itemId : singleChoice.getItemIds()) {
+                        Choice itemChoice = (Choice) itemId;
+                        if(itemChoice.getId().equals(myChoice.getId())){
+                            singleChoice.setValue(itemChoice);
+                        }
+                    }
+                    singleChoice.setData(question);
+                    singleChoice.setId(String.valueOf(answer.getId()));
+                    break;
+                }
+            }
         }
 
-        for (OptionGroup multipleChoices : multipleChoices) {
-            Collection selectedItems = (Collection) multipleChoices.getValue();
-            Iterator iterator = selectedItems.iterator();
-            while (iterator.hasNext()) {
-                Question question = (Question) multipleChoices.getData();
-                Choice choice = (Choice) iterator.next();
+        for (Object itemId : multipleChoice.getItemIds()) {
+            Question question = (Question) multipleChoice.getData();
+            Choice itemChoice = (Choice) itemId;
+            multipleChoice.unselect(itemChoice);
+            for (Answer answer : filledSurvey) {
+                if(question.getId().equals(answer.getQuestion().getId())) {
+                    Choice myChoice = answer.getChoice();
+                    if(itemChoice.getId().equals(myChoice.getId())){
+                        multipleChoice.select(itemChoice);
+                        break;
+                    }
+                }
             }
-        }*/
+            multipleChoice.setData(question);
+        }
     }
 }

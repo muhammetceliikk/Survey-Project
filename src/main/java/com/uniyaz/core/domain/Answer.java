@@ -29,6 +29,10 @@ public class Answer extends BaseEntity{
     @Column(name = "ANSWER")
     private String answer;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Survey getSurvey() {
         return survey;
     }

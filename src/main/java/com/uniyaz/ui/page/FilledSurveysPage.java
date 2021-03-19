@@ -17,11 +17,11 @@ import java.util.List;
 
 public class FilledSurveysPage extends BasePage {
 
-    private MyAddButton addSurveyButton;
     private Table table;
 
     private IndexedContainer container;
     private VerticalLayout mainLayout;
+    TextField searchField;
     private String mail;
 
     public FilledSurveysPage() {
@@ -49,25 +49,14 @@ public class FilledSurveysPage extends BasePage {
         HorizontalLayout searchLayout= new HorizontalLayout();
         mainLayout.addComponent(searchLayout);
 
-        TextField searchField = new TextField();
+        searchField = new TextField();
         searchLayout.addComponent(searchField);
 
-        Button searchButton = new Button();
-        searchButton.setIcon(FontAwesome.SEARCH);
-        searchButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                String mail = searchField.getValue();
-                fillTableByMail(mail);
-            }
-        });
+        Button searchButton = buildSearchButton();
         searchLayout.addComponent(searchButton);
 
         buildTable();
         mainLayout.addComponent(table);
-/*
-        addSurveyButton = buildAddSurveyButton();
-        mainLayout.addComponent(addSurveyButton);*/
     }
 
     private void buildTable() {
@@ -78,8 +67,7 @@ public class FilledSurveysPage extends BasePage {
 
         buildContainer();
         table.setContainerDataSource(container);
-        table.setColumnHeaders("ID", "SURVEY", "MAIL", "VIEW");
-//        table.setColumnHeaders("ID", "SURVEY", "MAIL", "Edit", "View");
+        table.setColumnHeaders("ID", "SURVEY", "MAIL", "EDIT");
 
     }
 
@@ -89,8 +77,7 @@ public class FilledSurveysPage extends BasePage {
         container.addContainerProperty("id", Long.class, null);
         container.addContainerProperty("name", String.class, null);
         container.addContainerProperty("mail", String.class, null);
-        container.addContainerProperty("view", MyEditButton.class, null);
-        //container.addContainerProperty("update", MyEditButton.class, null);
+        container.addContainerProperty("update", MyEditButton.class, null);
     }
 
     private void fillTable() {
@@ -108,11 +95,8 @@ public class FilledSurveysPage extends BasePage {
                 item.getItemProperty("name").setValue(survey.getName());
                 item.getItemProperty("mail").setValue(mail);
 
-                MyEditButton myViewButton = buildViewButton(survey,mail);
-                item.getItemProperty("view").setValue(myViewButton);
-
-                /*MyEditButton myEditButton = buildEditButton(survey);
-                item.getItemProperty("update").setValue(myEditButton);*/
+                MyEditButton myEditButton = buildEditButton(survey,mail);
+                item.getItemProperty("update").setValue(myEditButton);
             }
         }
     }
@@ -131,20 +115,15 @@ public class FilledSurveysPage extends BasePage {
                 item.getItemProperty("name").setValue(survey.getName());
                 item.getItemProperty("mail").setValue(customerSurvey.getMail());
 
-                MyEditButton myViewButton = buildViewButton(survey,mail);
-                item.getItemProperty("view").setValue(myViewButton);
-/*
-                MyEditButton myEditButton = buildEditButton(survey);
+                MyEditButton myEditButton = buildEditButton(survey,mail);
                 item.getItemProperty("update").setValue(myEditButton);
-*/
             }
         }
     }
 
-    private MyEditButton buildViewButton(Survey survey,String mail) {
-        MyEditButton myViewButton = new MyEditButton();
-        myViewButton.setIcon(FontAwesome.EYE);
-        myViewButton.addClickListener(new Button.ClickListener() {
+    private MyEditButton buildEditButton(Survey survey,String mail) {
+        MyEditButton myEditButton = new MyEditButton();
+        myEditButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 
@@ -153,39 +132,23 @@ public class FilledSurveysPage extends BasePage {
                 contentComponent.addComponent(new PreparedSurveyPage(survey,mail,true));
             }
         });
-        return myViewButton;
-    }
-
-    private MyEditButton buildEditButton(Survey survey) {
-        MyEditButton myEditButton = new MyEditButton();
-        myEditButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-
-                MyUI myUI = (MyUI) UI.getCurrent();
-                SurveyWindow surveyWindow  = new SurveyWindow(survey);
-                myUI.addWindow(surveyWindow);
-            }
-        });
         return myEditButton;
     }
 
-    private MyAddButton buildAddSurveyButton() {
-        MyAddButton myAddButton = new MyAddButton();
-        myAddButton.addClickListener(new Button.ClickListener() {
+    private Button buildSearchButton() {
+        Button searchButton = new Button();
+        searchButton.setIcon(FontAwesome.SEARCH);
+        searchButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-
-                MyUI myUI = (MyUI) UI.getCurrent();
-                SurveyWindow surveyWindow  = new SurveyWindow();
-                myUI.addWindow(surveyWindow);
+                String mail = searchField.getValue();
+                fillTableByMail(mail);
             }
         });
-        return myAddButton;
+        return searchButton;
     }
 
     public Table getTable() {
         return table;
     }
-
 }

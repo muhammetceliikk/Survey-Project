@@ -22,7 +22,6 @@ public class AnswerDaoTest {
             System.out.println(answer.getQuestion().getName());
             if(Objects.isNull(answer.getAnswer())){
                 System.out.println(answer.getChoice().getName());
-
             }
             else {
                 System.out.println(answer.getAnswer());
